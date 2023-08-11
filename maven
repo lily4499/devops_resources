@@ -1,0 +1,80 @@
+Maven
+Maven is a comprehensive build management tool that helps developers in performing the following tasks related to any project. 
+● Compiling the source code 
+● Running the test 
+● Packaging the code into jar files 
+● Upload build to binary repo 
+The process of building software is usually managed by a build tool i.e, maven. 
+Builds are created when a certain point in development has been reached or the code has been ready for implementation, either for testing or outright release. 
+Build: Developers write the code, compile it, compress the code and save it in a compressed folder. This is called Build. Release: As a part of this, developing the software and testing it for 
+multiple cycles and deploy the same in the production server. In short, one release consists of multiple builds.
+ 
+Maven is a powerful project management tool that is based on POM (project object model). It is used for projects build, 
+dependency and documentation. 
+» Prerequisites: Install Java: 
+https://www.oracle.com/java/technologies/downloads/#jdk19-mac 
+» Back end (Java) - Maven : 
+https://maven.apache.org/guides/getting-started/maven-in-five- 
+minutes.html
+
+Maven Concepts 
+Maven works around the following core concepts: 
+● Project Object Model (POM) is the XML representation of the project where all the dependencies and configuration details are stored. POM plays a major role in ensuring that all the project resource references are maintained. 
+● Build Life Cycles, Phases, Goals - Maven build process is composed of many build life cycles. 
+Each life cycle has one or more phases. Each phase has one or many associated goals. 
+● Dependencies and Repositories - Dependencies are external JAR files required for the project 
+to work. Maven downloads these dependencies into the local, central or remote repository 
+● Build Plugin - Adding plugins to the POM file allows us to add new custom actions to be 
+done during the build process 
+● Build Profile - Projects can be built differently by using different build profiles.
+
+Maven Lifecycle 
+» validate - validate the project is correct and all necessary information is available 
+» compile - compile the source code of the project 
+» test - test the compiled source code using a suitable unit testing framework. 
+These tests should not require the code be packaged or deployed 
+» package - take the compiled code and package it in its distributable format, such as a JAR. 
+» verify - run any checks on results of integration tests to ensure quality criteria are met 
+» install - install the package into the local repository, for use as a dependency in other projects locally 
+» deploy - done in the build environment, copies the final package to the remote repository for sharing with other developers and projects. 
+
+There are two other Maven lifecycles of note beyond the default list above. They are
+● clean: cleans up artifacts created by prior builds 
+● site: generates site documentation for this project
+
+POM File 
+Each project has a corresponding POM file that is located in the root directory. 
+Whenever a goal (a specific build task) has to be executed, Maven looks for the configuration details in POM. 
+● Project details can be represented in the form of XML file called pom.xml. 
+● It is the fundamental unit that contains information about the project. 
+● It holds all the resources required for a build such as source code location, test source, dependency details such as external or internal dependency etc. 
+
+POM file 
+Maven uniquely identifies a project using: GAV 
+● groupID: Usually it will be the domain name used in reverse format (going to be given by the project manager). 
+● artifactID: This should be the name of the artifact that is going to be generated 
+● version : Version of the project, Format {Major}.{Minor}.{Maintenance} and add “- SNAPSHOT” to identify in development Version can be two things here, a SNAPSHOT and other is RELEASE. 
+
+Packaging 
+Build type is identified by <packaging> element, this element will tell how to build the project. 
+Example packaging types: jar, war etc. 
+
+Archetype 
+Maven archetypes are project templates which can be generated for you by Maven. 
+In other words, when you are starting a new project you can generate a template for that project with Maven. 
+In Maven a template is called an archetype. 
+Each Maven archetype thus corresponds to a project template that Maven can generate.1112 
+● To create a new simple maven project - 
+● mvn -B archetype:generate -DgroupId=com.ibt.<yourname-app> - DartifactId=<yourname>-app -DarchetypeArtifactId=maven-archetype- quickstart -DarchetypeVersion=1.4 
+● Run the following goals: 
+○ mvn clean 
+○ mvn validate 
+○ mvn compile
+
+Super POM 
+POMs can also inherit properties from a single POM called Super POM. 
+Super POM is a view-only POM to see the entire attributes of all the dependencies spanning across multiple POMs. By default, all POMs will inherit Super POM settings. However, these settings can be overridden if necessary. 
+Quite often, it is possible that a project might have many sub-projects. In such cases, each subproject will have its own pom.xml file, while, the project might have a separate parent POM. 
+This way the project can be built together with sub-projects or the sub- projects can be built independently .
+To view super-pom of the project - Run command
+ - mvn help:effective-pom
