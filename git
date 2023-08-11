@@ -1,0 +1,181 @@
+repository: project or folder
+Git: Tool that tracks the changes in your code
+Github: Website to host your repository online
+
+A fork creates a completely independent copy of Git repository.
+A clone creates a linked copy that will continue to synchronize with the target repository.
+
+git checkout filename: Undo uncommitted changes. Rollback changes you have only saved(add).
+git init -> git status-> git add form.html -> vi add.html ->git checkout -- <filename>
+git revert commitID : Undo committed changes. Rollback changes you have committed.
+git reset --soft <commit-id> or HEAD~1: return the entire working tree to the last committed state: move the HEAD pointer
+git reset --mixed HEAD~1: update the Staging Area (with the content that the HEAD is pointing to) 
+git reset --hard HEAD~1 : updates the Working Directory to match the Staging Area.
+
+git pull = git fetch + git merge 
+Git show :file.html
+
+        Git Commands
+
+init: initialize local git repo
+add <file> : Add file to staging area
+status: check status of working tree
+commit: commit changes in staging area
+fetch: fetch from remoteRepo to LocalRepo
+push : push from localRepo to remoteRepo
+pull : pull latest from remoteRepo to workingDir
+clone : clone remote repo locally
+branch <branch name> : Create a new branch
+branch -a : List all remote branches
+branch : List all of the branches in your repository
+branch -d <branch> : Delete the specified branch
+branch -m <branch> : Rename the current branch to 
+
+checkout <branch name> : Switch to a branch
+merge <branch name> : Merge a branch with another when feature branch is in remote, create new commit, safe in nature
+rebase <branch name> :Merge a branch with another when feature branch is local, does not create new commit, destructive in nature
+rebase main: Merge a branch with another
+        This moves the entire feature branch to begin on the top of the main branch
+git stash is used to temporarily store uncommitted work in order to clean out your working directory without having to commit unfinished work on a branch.
+git tag command is used to give a permanent bookmark to a specific point in the code history. Generally this is used for things like releases.
+
+commit --amend : modify commit message
+log --oneline : give info in one line
+show <commitID> : display commit ID, author, date, ...
+vi .gitignore  (*.txt)   =>  anyfile  .txt  extension wont be add
+
+***************************************
+
+        Create a new repository  => owner/repository name(the same name as local repo)  => click create
+git branch -M main
+git remote add origin URL
+git push -u origin main
+
+****************************************************
+        GIT WORKFLOW
+- Obtain a repository: git init, git clone, git pull
+- Make some changes
+- Stage your changes : git add
+- Commit changes to the local repository: git commit
+- Push changes remote : git push remotename remotebranch
+
+Local repo is the .git hidden folder inside the working directory.
+
+the trees of git: Working directory, Staging Area and the Repository.
+
+workingDir-> git add->Stage-> git commit->LocalRep(.git)-> git push->RemoteRepo
+RemoteRepo-> git fetch-> LocalRepo-> git checkout ->workingDir
+RemoteRepo -> git pull ->WorkingDir
+
+        GITHUB Flow
+   Master branch v1
+     create feature branch from master
+        commit changes => submit pull request => discuss proposed changes
+     Merge feature branch into master
+   Master branch v2
+
+****************************************************************
+
+The overall flow of Gitflow is:
+
+A develop branch is created from main
+A release branch is created from develop
+Feature branches are created from develop
+When a feature is complete it is merged into the develop branch
+When the release branch is done it is merged into develop and main
+If an issue in main is detected a hotfix branch is created from main
+Once the hotfix is complete it is merged to both develop and main
+
+************************************
+
+A complete example demonstrating a Feature Branch Flow is as follows.
+Assuming we have a repo setup with a main branch.
+
+git checkout main
+git checkout -b develop
+git checkout -b feature_branch
+# work happens on feature branch
+git checkout develop
+git merge feature_branch
+git checkout main
+git merge develop
+git branch -d feature_branch
+
+In addition to the feature and release flow, a hotfix example is as follows:
+git checkout main
+git checkout -b hotfix_branch 
+# work is done commits are added to the hotfix_branch
+git checkout develop
+git merge hotfix_branch
+git checkout main
+git merge hotfix_branch
+
+****************************************************************
+
+Making a Pull Request
+
+A developer creates the feature in a dedicated branch in their local repo.
+The developer pushes the branch to a public Bitbucket repository.
+The developer files a pull request via Bitbucket.
+The rest of the team reviews the code, discusses it, and alters it.
+The project maintainer merges the feature into the official repository and closes the pull request.then delete the branch
+
+git clone or git pull  from main branch
+git checkout -b feature/lili
+vi file.py
+git add file.py
+git commit -m ''
+git push -u origin feature/lili
+
+Go to GITHUB -> click on repo -> click on Pull requests -> click on New pull request -> base:branch you want to merge to <=> compare: created branch -> click on create pull request -> click on Reviewers -> choose at least a reviewer
+
+****************************************************************
+
+            Git commands that can help resolve merge conflicts
+
+git status :  it will help identify conflicted files.
+git log --merge : produce a log with a list of commits that conflict between the merging branches.
+git diff : helps find differences between states of a repository/files.
+
+            Tools for when git fails to start a merge
+git checkout : for undoing changes to files, or for changing branches
+git reset --mixed : to undo changes to the working directory and staging area.
+
+            Tools for when git conflicts arise during a merge
+git merge --abort : return the branch to the state before the merge began.
+git reset : to reset conflicted files to a know good state
+
+****************************************************************
+
+git clean : Removes untracked files from the working directory
+git config : A convenient way to set configuration options for your Git installation
+
+git remote : List the remote connections you have to other repositories.
+git remote -v : Same as the above command, but include the URL of each connection.
+
+****************************************************************
+
+How to get a repository in Github
+
+create repo in github 
+mkdir folder
+cd folder
+git clone url-of-your-repo-in-Github
+git clone url-of-the-repo-you-want
+cd to-your-repo/
+cp -r ../that-repo/* .
+git add .
+git commit -m ""
+git push
+
+
+To delete a branch in a remote Git repository, follow these steps:
+
+Checkout a Different Branch:
+git checkout main
+Delete the Remote Branch:
+Use the git push command with the --delete or -d option to delete the remote branch. The syntax is as follows:
+git push <remote_name> --delete <branch_name>
+git push origin --delete feature/branch-to-delete
+Verify Deletion:
+git remote show origin
