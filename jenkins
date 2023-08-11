@@ -1,0 +1,507 @@
+Developer works on GIT, then commit their code to GITHUB. 
+Continuous Integration
+Jenkins trigger build from GITHUB or inverse, run static code analysis, build code, push artifacts to JFROG.
+Continuous Deployment
+Jenkins talk to ANSIBLE to configure your servers, also allow you to deploy application to the server.
+When we are going to CLOUD:
+Terraform allow to create resources on Cloud, resources using k8s. 
+DOCKER allows to containerize application.
+
+Mvn site: Create documentation site for your maven project
+To upload your site documentation to artifactory, run mvn site-deploy
+
+To start working on a maven project from your organization in GITHUB, copy URL , then come to IntelliJ -> new -> project from version control -> clone it
+Clone repository - https://github.com/IBT-learning/ibt-maven
+ Create a new branch : feature-yourname
+ Update App.java ( hello world - this is yourname)
+ Update pom.xml to new version
+Update distribution management to run mvn deploy
+Run some mvn commands to be sure it is working
+ Push your changes to your branch
+ Generate settings.xml from artifactory or use the one added to the main branch and copy to your local maven repo
+if using the settings.xml from repo, ensure to update your encrypted password
+ Perform mvn commands and push the artifact to Artifactory
+JENKINS
+Dashboard: New item; People; Build history; Manage jenkins; My views
+What is JENKINS
+Jenkins is a CI tool that allows continuous development test and deployment of newly created code
+Developer -> Code commit -> build -> test -> release -> deploy -> dev env -> QA env -> prod env
+JENKINS allows us to :
+Compiles and buuilds the code
+Run an internal shell or command line script
+Starts execution of the integrations tests
+Monitor execution of tasks
+Stops build in case of failure
+Notify user on the build status
+Deploy in test or production environment
+
+Maven plugins
+Maven integration : to run mvn command
+Config File provider : to add settings.xml file 
+Pipeline maven integartion
+Artifactory to upload
+
+
+How to start jenkins on different port rather than 8080 using command prompt in Windows?
+Open the jenkins.xml in the jenkins home folder (usually C:\Program Files (x86)\Jenkins) and change the port number:
+httpPort=xxxx
+to
+httpPort=yyyy
+then restart the service. it should change the setting permanently.
+
+
+Manage Jenkins
+SYSTEM CONFIGURATION
+
+SYSTEM
+Home directory: where jenkins stores all of its data in this directory on the file system
+C:\ProgramData\Jenkins\.jenkins
+
+System message: This message will be displayed at the top of the Jenkins main page. This can be useful for posting notifications to your users
+
+Plugins installed have some configuration in SYSTEM, used to create automate job.
+
+Executors: number of paralelle jobs that jenkins can run. In my organization is 10.
+
+Jenkins URL: you can change jenkins URL here : http://liliane-jenkins:8080/
+
+If evreyone has to use a particular Jfog, you can add URL: https://ibt.jfrog.io/ or instance in SYSTEM
+
+TOOL: 
+For jenkins on windows , Git needs to be configured as below:
+ADD PATH: C:\Program Files\Git\bin\git.exe
+
+You can install multiple version of maven here, so user need to give only the name in their project
+
+Nodes :
+By default you are to run will be on your localhost
+You can distribute your job on differents servers using “new node” that can be a server outside this localhost like physical server in a datacenter, or a cloud server
+To attach to that server, Jenkins needs only java installed and a user called jenkins on that server . you can decide now where you want a job to be run and reduce the overall load on your main jenkins
+
+Managed files:
+If maven wants to upload to Artifactory, the maven deploy command needs a settings.xml that is download from Artifactory and kept in the folder on our PC.
+Imagine this jenkins is not on your own pc, so you don’t have access to keep that file; what you can do, it is to add Maven settings.xml in “New configuration”
+Give a proper ID: artifactory-settings to select when create the job, name same as ID, get the file on folder then copy and paste here, finally submit.
+
+SECURITY
+
+Authentication
+who can login to jenkins?
+Security Realm -> click on allow users to sign up
+
+What access that person can have? 
+How much of detailling that you want to give for that person?
+Authorization -> Matrix-based security -> to give user specific access like job or administer or overall/read permission.
+You authenticate using username and password to login, then check which authorization do you have
+
+Credentials:
+To talk to a particular tool, jenkins needs his credentials
+
+Users: you can allow user to sign up, either you can create users here
+
+JOBS:
+CONFIGURE = General; Source Code Management; Build Triggers; Build Environment; Build Steps; Post-build Actions
+
+Jenkins job is any automation script that you just write it once and it does the same thing over and over again.
+
+General -> click on  Discard old builds -> Strategy -> Log Rotation -> Days to keep builds =10 or 15 -> Max nber of builds to keep =10 or 15
+
+
+BUILD TRIGGERS:  
+
+Click on Trigger builds remotely -> authentication token =create-one(whoever that has that will be able to triggle job oustside jenkins)
+You can triggle a particular jenkins job outside of jenkins by copy and paste the url on the browser then add token
+
+Click on Build after other projects are built -> project to watch= job_test1(CI) 
+-> click on trigger only if build is stable
+Run job_test2(CD) after job_test1(CI) has completely successfully.
+Go to job_test1 -> click on build now that will trigger job_test2
+
+Click on Build periodically -> Schedule (M H DOM M DOW)= H/2****=every 2 min the job run
+
+Click on Poll SCM -> Schedule -> H/2**** : every 2 min, it goes to github to see if there is an update, then it runs the job
+
+Click on Github hook trigger for GITScm polling:Configure github to send a trigger to jenkins when there is an update. So Jenkins doesn’t need to poll every time github.
+We do it only when jenkins is hosted on the internet like jenkins_IBT and not a localhost. Github.com wont be able to talk to localhost
+
+
+Build Steps: more plugins installed, more build steps appear
+
+FREESTYLE Deploy to artifactory (JFROG):
+
+Click on Build steps -> Invoke Artifactory Maven3 (to build)-> choose maven version -> Goals=validate compile test package
+
+First way to deploy:
+Click on Build steps -> Invoke Top-level Maven targets (to deploy)->  choose maven version -> Goals= deploy -> Advanced -> settings file-> choose provided settings.xml
+
+second way to deploy:
+Click on Build Environment -> use secret text or files -> -> secret file -> give variable_name=artifactory_settings -> credentials -> choose your settings credential
+
+Click on Build steps -> Invoke Top-level Maven targets (to deploy)-> choose maven version -> Goals= deploy -> Advanced -> settings file-> choose settings file in filesystem -> $variable_name
+
+NB: To deploy Maven artifacts to Artifactory, add a deployment element to the pom.xml file of your Maven project with the target local repository URL that you want to deploy your artifacts.  For example:
+
+<distributionManagement> <repository> <id>central</id> <name>a0n5tucjjiuir-artifactory-primary-0-releases</name> <url>https://ibt.jfrog.io/artifactory/ibt-libs-release</url> </repository> </distributionManagement>
+
+
+Selenium is a UI/QA testing tool, QA team writing automation testing.integrate selinium with jenkins and run tests cases
+
+
+
+
+PIPELINE : jenkins file or pipeline script
+
+PIPELINE STEPS:
+
+Git checkout -> mvn validate -> mvn compile -> mvn test -> Sonarqube Analysis -> mvn package -> Vulnerability Scan - Dependency Check -> Deploy to Artifactory -> Deploy to tomcatDev -> Approval -> Deploy to tomcatProd
+
+Everything is written in 1 file called groovy script that become part of your GIT repository so you don’t need to come to jenkins and change anything, you do it from git repo itself
+
+Declarative pipeline
+pipeline {
+agent any  or {
+	  Docker ‘ubuntu'
+}
+    tools { maven ‘maven_3.9.3’
+    }
+    stages {
+        stage('Build') {
+            steps {
+
+Scripted pipeline
+
+node {
+    def mvnHome
+    stage('Preparation') { // for display purposes
+        mvnHome = tool 'M3'
+    }
+stage('Build') {
+
+
+
+PIPELINE AS CODE
+
+PIPELINE : is a user-defined model of a CI-CD pipeline. A pipeline’s code defines your entire build process, which typically includes stages for building an application, testing it and then delivering it.
+
+NODE: is a machine which is part of the jenkins environment and is capable of executing a pipeline
+ 
+DEMO CI Pipeline
+
+1-Maven goals(run mvn validate test; build mvn code=mvn clean install; push code to registry= setup settings.xml in jenkins=manage jenkins->manage files)
+2-Sonarqube
+3-Vulnerability check
+
+
+
+SONARQUBE INTEGRATION (SAST)
+
+1-Jenkins (plugin sonarqube scanner; update configure system, update global tool configuration)
+2-Server Sonarqube (create project in sonarqube; administration-> configuration ->webhooks. The url should point to your jenkins server https://{JENKINS HOST}/sonarqube-webhook/)
+
+
+SONARQUBE : PIPELINE CODE
+
+Stage(“sonarqube test”) {
+	  Environment {
+		scannerHome = tool ‘ibt-sonarqube’;
+}
+Steps {
+withSonarQubeEnv(credentialsId: ‘SQ-student’, installationName: ‘IBT sonarqube’) {
+Sh “${scannerHome}/bin/sonar-scanner”
+}
+}
+}
+
+
+BRANCH CONDITION
+
+Scenario: what if you want to run certain stages only on feature branch
+Stage(‘validate mvn project’) {
+	When {
+		Expression { Env.BRANCH_NAME==’feature_lili’ }
+			or
+		Branch ‘feature_lili’
+	}
+	Steps {
+		Sh “mvn validate”
+
+
+
+parameters
+
+The parameters directive provides a list of parameters that a user should provide when triggering the Pipeline.
+pipeline {
+    agent any
+    parameters {
+        string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
+    }
+    stages {
+        stage('Example') {
+            steps {
+
+                echo "Hello ${params.PERSON}"
+
+
+environment
+
+An environment directive used in the top-level pipeline block will apply to all steps within the Pipeline.
+An environment directive defined within a stage will only apply the given environment variables to steps within the stage.
+The environment block has a helper method credentials() defined which can be used to access pre-defined Credentials by their identifier in the Jenkins environment.
+
+
+
+pipeline {
+    agent any
+    environment {   ->1
+        CC = 'clang'
+        Version=’1.0.0’
+    }
+    stages {
+        stage('Example') {
+            environment {    ->2
+                AN_ACCESS_KEY = credentials('my-predefined-secret-text')   ->3
+            }
+            steps {
+                sh 'printenv'
+
+	Stage (‘variable’){
+	    Steps {
+	        Sh ‘echo “$version” ‘
+	        Echo “${env.version}”
+	        Script{
+		Print env.version
+
+
+
+pipeline {
+    agent any
+parameters{
+    string(name:'Branch_Name', defaultValue:'main', description:'Enter the branch to build')
+}
+environment{
+    version='1.0.0'
+}
+
+    stages {
+        stage('Hello') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+       stage('hi') {
+            steps {
+                echo 'hi'
+            }
+        }
+        stage('working from github'){
+            steps{
+                sh "pwd"
+            }
+        }
+        stage('get branchName'){
+            steps{
+                echo "${params.Branch_Name}"
+            }
+        }
+        stage('git checkout')
+        {
+            steps{
+                checkout scmGit(branches: [[name: '*/$Branch_Name']], extensions: [], userRemoteConfigs: [[credentialsId: 'ibt', url: 'https://github.com/IBT-learning/ibt-maven.git']])
+            }
+        }
+         stage('list files'){
+            steps{
+                sh 'ls'
+             }
+        }
+       stage('checking condition'){
+        when{
+          expression{
+            env.BRANCH_NAME=='main'
+          }
+        }
+        steps{
+             echo "i am ruuning since the condition is met"
+        }
+       }
+       stage('variables'){
+               steps{
+                   sh 'echo "$version" '
+                   echo "${env.version}"
+                   script{
+                       print env.version
+                   }
+               }
+              }
+    stage('testing webhook'){
+        steps{
+            echo "i am running from git push"
+        }
+    }
+  }
+    post{
+                    always{
+                        echo "i will run everytime"
+                    }
+                }
+
+}
+
+
+
+INTEGRATION OF GITHUB WITH JENKINS; everytime a commit, jenkins job run
+
+Github Webhook
+Go to Github.com -> go to your repo
+Go to settings
+Click on webhooks -> add webhook
+Add the jenkins URL (https://jenkins.ibtlearning.com/github-webhook/)
+
+
+
+SCAN TYPES
+Static scan - static code/github repo : tool= sonarqube, checkmarx (Jenkins download all file from github, then Sonarqube run some scan on top of it)
+
+Dynamic scan - binary artifact, vulnerability scans: tool= nexusIQ /xray/ dependencyGraph (to scan artifact)
+
+Image scans -  tool= aqua, xray
+
+
+INTEGRATION OF Jenkins WITH SONARQUBE for testing;analyzing the source code itself to find issues related to code quality, maintainability, security,
+
+Go to jenkins -> install plugin SonarQube Scanner
+
+Install sonarqube on a sever then login
+Go to project -> create project (every analysis by a team will be upload here) -> project name =may17_cohort= Projectkey to add to jenkinsfile for jenkins to upload in that project-> set up
+Choose Tool to integrate -> choose jenkins -> choose github -> click on confugure analysis-> click on continue -> click on continue-> on create a jenkinsfile: choose Maven -> copy the code to paste before stage= package
+
+withSonarQubeEnv(): missing credential and URL to login: 
+Go to sonarqube -> account -> security -> then create token and give  a token_name
+Go to jenkins -> credentials -> choose secret text -> create credential
+URL is provide in manage jenkins -> configure system -> create sever name= IBT sonarqube -> add URL sonarqube -> add token_name
+Tool is provide in global tool config -> sonarqube scanner= 4.8.0.2856
+
+Stage(“sonarqube test”) {
+	  Environment {
+		scannerHome = tool ‘ibt-sonarqube’;
+}
+Steps {
+withSonarQubeEnv(credentialsId: ‘SQ-student’, installationName: ‘IBT sonarqube’) {
+Sh “${scannerHome}/bin/sonar-scanner -Dsonar.propertykey=..” or
+Sh “${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.propertykey=..”
+
+
+
+
+INTEGRATION OF Jenkins WITH OWASP Dependency-Check: checking the known vulnerabilities associated with the third-party libraries
+
+Go to manage plugins -> OWASP Dependency-Check Plugin
+
+Go to Tool -> Dependency-check -> add tool -> install automatically -> dependency-check 8.1.1
+
+Go to pipeline syntax -> invoke dependency check -> generate
+Go to pipeline syntax -> publish dependency-checks results -> give file name= check-result.xml
+You can add: stop build when a failed threshold is violated -> total findings -> critical=0, high=2, medium=3, low=5
+
+
+
+
+
+MAVEN DEPLOYEMENT to JFROG (connect to external tool then upload)
+
+MAVEN DEPLOYEMENT using SECRET FILE
+
+Go to credentials  -> choose secret file -> add “settings.xml” -> jenkins use it to deploy.
+
+Go to pipeline syntax -> choose with credentials -> add secret file -> give a variable
+Sh ‘mvn deploy -s $variable’   -S -> to tell mvn command where the file is.
+
+MAVEN DEPLOYEMENT using USERNAME , PASSWORD
+ 
+Go to pipeline syntax -> choose with credentials -> add username and password(separated) -> give variable username and password ->  choose your credentials added
+Sh ‘main.py $var_user $var_pass’  
+
+ MAVEN DEPLOYEMENT using CONFIG FILE PROVIDER(here somebody has admin right and add it in Manage jenkins -> managed files)
+
+Go to pipeline syntax -> choose configFile Provider-> choose file -> give a variable (using it when use mvn deploy )
+
+MAVEN DEPLOYEMENT using WITH MAVEN
+ 
+Go to pipeline syntax -> choose withMaven -> choose tool -> give maven settings
+Sh ‘mvn deploy’
+
+
+You can customize various properties in the SonarQube properties files (sonar-project.properties) to control its behavior and analysis: 
+sonar.projectKey: A unique identifier for your project in SonarQube.
+sonar.projectName: The human-readable name of your project.
+sonar.java.binaries: The directory containing compiled classes.
+sonar.login and sonar.password: Credentials to authenticate with the SonarQube server.
+sonar.language: The primary programming language of your project (e.g., "java", "javascript", "python").
+sonar.sources: The directory or directories containing your source code.
+sonar.login and sonar.password: Credentials to authenticate with the SonarQube server (consider using token-based authentication for security).
+
+
+
+
+Features of Jenkins:
+
+Easy to install
+Easy to configure
+Rich plugin ecosystem
+Permanent links - providse direct links to the latest or failed build
+Distributed build
+File fingerprinting - Manages dependencies
+Email integration - Email the build status
+
+
+
+Jenkins multibranch pipeline
+
+Instead to provide the branch name where jenkinsfile is situated, you directly provide a git repo to scan it to look up which ever branch has a jenkinsfile: create a job for it then run that jenkinsfile.
+Here DevOps create one job multibranch per team , per repo; when developer push branch to git, jenkins will detect your branch via Jenkinsfile and create job for you. So no need for developer to create job.
+Git clone from main branch
+Git checkout -b develop_branch
+Git add Jenkinsfile
+Git commit -m 
+Git push -u origin
+
+
+
+
+Jenkins Share Library:
+Instead of rewritting jenkinsfile per project, you create a separate repo call jenkins-library that have common script that can be reuse by any other application
+This project provides easy example of shared library which can be used into Jenkins pipeline.
+Setup instructions
+Go to github create a repo call jenkins-library -> the create a directory call “vars” -> create file library_name.groovy
+def call(body) {
+1.In Jenkins, go to Manage Jenkins → Configure System. Under “Global Pipeline Libraries”, add a library with the following settings:
+Library name: jenkins-library
+Default version: Specify a Git reference (branch or commit SHA), e.g. main
+Retrieval method: Modern SCM
+Select the Git type
+Project repository: https://github.com/IBT-learning/jenkins-library.git
+Credentials: (leave blank)
+You may have to turn off ssl verification using: git.exe config --global http.sslVerify false
+1.Then create a Jenkins job with the following pipeline (note that the underscore _ is not a typo):
+@Library('jenkins-library')_
+pipeline {
+ stage('SonarQube Scan') {
+            steps{
+                sonarScan()
+
+
+
+Install Jenkins Node/Agent
+
+Go to server(node)
+-> add user(useradd -m jenkins; passwd jenkins)
+-> install JAVA (update, install openjdk-11-jdk)
+For jenkins to connect to that server-> Go to manage jenkins -> manage nodes-> click new node -> name (UX_IBT)-> clik on permanent agent -> 3 executors -> /tmp directory -> labels: UX_IBT-> launch agents via ssh-> ip_hosts -> his credentials ->non verifying startegy -> save
+To see connectivity -> manage jenkins -> nodes -> click node_name -> log
+To run pipeline job on this node -> create pipeline job-> 
+Pipeline {
+	Agent {label ‘UX_IBT’}
+
+To run freestyle job on this node -> create freestyle job-> General -> Datadog tagging -> click on Restrict where this project can be run -> label expression = UX_IBT
+
+You can attach one label to one or multiple servers.
