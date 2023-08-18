@@ -1,0 +1,41 @@
+Python platform module
+In Linux, we have a command called uname. This will give you information like Operating System Version, Kernel version, architecture.
+$ uname
+Linux
+$ uname -r
+4.14.232-176.381.amzn2.x86_64
+$ uname -m
+x86_64
+$ uname -a
+Linux ip-172-31-10-219.ec2.internal 4.14.232-176.381.amzn2.x86_64 #1 SMP Wed May 19 00:31:54 UTC 2021 x86_64 x86_64 x86_64 GNU/Linux
+
+
+A platform module is used to access underlying platform data such as operating system, interpreter version information, and hardware.
+>>> platform.system()
+'Linux'
+
+# during the early days we use to write script based on architecture if it’s 64bit then perform this build and perform different build in case of 32bit
+>>> platform.architecture()
+('64bit', 'ELF')
+>>> platform.machine()
+'x86_64'
+
+# To get the kernel information
+>>> platform.uname()
+uname_result(system='Linux', node='ip-172-31-10-219.ec2.internal', release='4.14.232-176.381.amzn2.x86_64
+>>> platform.release()
+'4.14.232-176.381.amzn2.x86_64'
+             
+# To know the Python version
+>>> platform.python_version()
+'3.7.9'
+
+One of the most common use cases of the platform module is writing the cross-platform script and executing the command based on the operating system. In the below case, if the operating system is Linux, execute the ls command, or if it’s window execute the dir command, else print unsupported operating system.
+import platform
+import os
+if platform.system() == 'Linux':
+os.system("ls")
+elif platform.system() == 'Windows':
+os.system("dir")
+else:
+print("Unsupported operating system")
