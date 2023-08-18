@@ -96,5 +96,31 @@ if __name__ == '__main__':
     main()
 
 *******************************************************************************************************************
+Add User to Docker Group (Linux Only): To avoid using sudo every time you run Docker commands, you can add your user to the "docker" group. This allows your user to interact with Docker without needing elevated privileges. Run the following command to add your user to the "docker" group:
+
+sudo usermod -aG docker $USER
+After running this command, you may need to log out and log back in or restart your system for the group changes to take effect.
+
+Check Docker Socket Permissions: Ensure that the Docker socket file /var/run/docker.sock has appropriate permissions. The socket should be owned by the "docker" group, and your user should be a member of that group. You can use the following command to check the permissions:
+
+ls -l /var/run/docker.sock
+The output should look something like:
+
+srw-rw---- 1 root docker 0 Aug 18 10:00 /var/run/docker.sock
+If the permissions are incorrect, you can change them using the chmod command:
+
+
 sudo chmod 666 /var/run/docker.sock
+Note that changing the permissions to 666 makes the socket world-writable, which might have security implications. It's recommended to use the group approach (step 2) for a more secure setup.
+
+Restart Docker: After making any changes to permissions or group memberships, restart the Docker service to apply the changes:
+
+
+sudo service docker restart
+Docker Configuration: Sometimes, Docker configuration files or environment variables might affect the permissions. Check your Docker configuration files (typically found in /etc/docker/) and ensure there are no conflicting settings.
+
+Remember that changing permissions and group memberships can have security implications, so it's important to strike a balance between convenience and security when setting up Docker on your system.
+
+
+
 
