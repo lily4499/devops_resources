@@ -1,0 +1,38 @@
+A Python script to search files greater than X days old
+
+This kind of script is helpful when your server is low in disk space and needs to search for older files and then delete them.
+
+import os
+for dirpath, dirname, filename in os.walk("/etc"):
+    for file in filename:
+        comp_path= os.path.join(dirpath,file)
+
+Once we get the complete path, the next step is to find when the particular file is created to do that with the time help of os.path.getctime(filename).
+>>> os.path.getctime("/etc/hosts")
+1623687666.8315635
+
+But the output of the above command is in sec. Now it’s time to introduce a new Python module called datetime. 
+datetime.datetime.fromtimestamp(os.path.getctime("/etc/hosts"))
+datetime.datetime(2021, 6, 14, 9, 21, 6, 831563)
+
+Now we have the date on which the file is created; the next step is to find the current date.
+>>> datetime.datetime.now()
+datetime.datetime(2021, 7, 4, 10, 31, 41, 664467)
+
+The next step is to calculate the difference between the current date and the file creation date and use days() to get only the days.
+time_diff=(today_date-file_creation_time).days
+
+So your complete code will look like this
+import os
+import datetime
+
+file_age=15
+today_date=datetime.datetime.now()
+
+for dir,dirpath,filename in os.walk("/var/log"):
+    for file in filename:
+        complete_path=os.path.join(dir,file)
+        file_creation_time=datetime.datetime.fromtimestamp(os.path.getctime(complete_path))
+        time_diff=(today_date-file_creation_time).days
+        if time_diff> file_age:
+            print(complete_path, time_diff)
