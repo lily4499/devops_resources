@@ -1,0 +1,96 @@
+import platform
+import subprocess
+
+def get_linux_distribution():
+    try:
+        with open('/etc/os-release') as os_release:
+            lines = os_release.readlines()
+            for line in lines:
+                if line.startswith('ID='):
+                    distro_id = line.strip().split('=')[1]
+                    return distro_id.lower()
+    except Exception as e:
+        print("Error:", e)
+        return 'unknown'
+
+distro = get_linux_distribution()
+
+def install_docker():
+    os_name = platform.system()
+
+    if os_name == 'Linux':
+        #distro = platform.linux_distribution()[0].lower()
+        if distro in ['centos', 'redhat']:
+            # Install Docker on CentOS or Amazon Linux
+            subprocess.run(['sudo', 'yum', 'install', '-y', 'yum-utils'])
+            subprocess.run(['sudo', 'yum-config-manager', '--add-repo', 'https://download.docker.com/linux/centos/docker-ce.repo'])
+            subprocess.run(['sudo', 'yum', 'install', '-y', 'docker-ce'])
+            subprocess.run(['sudo', 'systemctl', 'start', 'docker'])
+            subprocess.run(['sudo', 'systemctl', 'enable', 'docker'])
+        elif distro == 'ubuntu':
+            # Install Docker on Ubuntu
+            subprocess.run(['sudo', 'apt', 'update'])
+            subprocess.run(['sudo', 'apt', 'install', '-y', 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common'])
+            subprocess.run(['curl', '-fsSL', 'https://download.docker.com/linux/ubuntu/gpg', '|', 'sudo', 'gpg', '--dearmor', '-o', '/usr/share/keyrings/docker-archive-keyring.gpg'])
+            subprocess.run(['echo', '"deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu', f'{get_linux_distribution()} stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null'])
+            subprocess.run(['sudo', 'apt', 'update'])
+            subprocess.run(['sudo', 'apt', 'install', '-y', 'docker-ce'])
+            subprocess.run(['sudo', 'systemctl', 'start', 'docker'])
+            subprocess.run(['sudo', 'systemctl', 'enable', 'docker'])
+        else:
+            print("Unsupported Linux distribution:", distro)
+    else:
+        print("Unsupported operating system:", os_name)
+
+def main():
+    install_docker()
+
+if __name__ == '__main__':
+    main()
+
+
+*********************************************
+
+To use this script:
+
+Save the script to a file named install_docker.py.
+
+
+chmod +x install_docker.py
+
+
+*********************************************************************************************************************************************************************************************************
+
+import os
+
+def install_docker():
+    # Update the package index
+    os.system('sudo apt update')
+
+    # Install necessary packages
+    os.system('sudo apt install apt-transport-https ca-certificates curl software-properties-common')
+
+    # Add Docker repository GPG key
+    os.system('curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg')
+
+    # Add Docker APT repository (x86_64/amd64 architecture)
+    os.system('echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null')
+
+    # Update the package index again
+    os.system('sudo apt update')
+
+    # Install Docker
+    os.system('sudo apt install docker-ce')
+
+    # Start and enable the Docker service
+    os.system('sudo systemctl start docker')
+    os.system('sudo systemctl enable docker')
+
+    # Display Docker version
+    os.system('sudo docker --version')
+
+def main():
+    install_docker()
+
+if __name__ == '__main__':
+    main()
