@@ -64,3 +64,53 @@ for dirpath, dirname, filename in os.walk("/etc/openldap"):
             print(comp_path)
             file_size = os.path.getsize(comp_path)
             print("File size is: ", file_size, "bytes")
+
+
+
+************************************************************************************************************************************************************************************************************************
+
+A python script to search for a file
+The idea behind it is to create a find utility using Python to pass directory names and files to search.
+So far, our code looks like this, whereby using os.walk(), we are iterating over the /etc directory and then using os.path.join() we combine directory with the filename.
+import os
+for dirpath, dirname, filename in os.walk("/etc"):
+    for file in filename:
+        comp_path= os.path.join(dirpath,file)
+
+To find out the specific file, we can use the if statement and then only print the complete path if the file matches.
+if file == "hosts":
+    print(comp_path)
+So our complete code will look like below.
+import os
+
+for dirpath, dirname, filename in os.walk("/etc"):
+    for file in filename:
+        comp_path= os.path.join(dirpath,file)
+        if file == "hosts":
+            print(comp_path)
+If you save this code in find_files.py and search for hosts file in /etc directory, you will get the below output.
+python3 find_files.py           
+/etc/hosts
+
+The second version of this script is to make it user-friendly so that it will accept arguments like the path to search
+1.Import the Python argparse library
+import argparse
+2. Create the parser
+my_parser = argparse.ArgumentParser(description='Reading the d
+3. Add optional and positional arguments to the parser. Here we are passing two-argument pathname to specify the path and filesearch for the file to search.
+my_parser.add_argument("pathname",help='Please enter the directory path ')
+my_parser.add_argument("filesearch",help='Please enter the filename to search')
+4. Execute .parse_args()
+args = my_parser.parse_args()
+If you execute your script with the -h(help) option, you will get the output below.
+python3 find_files.py -h
+
+Now you need to make few changes to your code. Rather than passing /etc to os.walk(), you need to pass args.pathname, and similarly, rather than passing filename directly, i.e., hosts, you need to pass args.filesearch.
+for dirpath, dirname, filename in os.walk(args.pathname):
+    for file in filename:
+        comp_path= os.path.join(dirpath,file)
+        if file == args.filesearch:
+            print(comp_path)
+To execute your script.
+python3 find_files.py /etc hosts
+/etc/hosts
