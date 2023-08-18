@@ -1,0 +1,25 @@
+ Python sys module
+Sys has nothing to do with your Operating System, it is only used to manipulate your Python runtime environment.
+
+To print the version number of the Python interpreter
+>>> sys.version
+'3.7.9 (default, Apr 30 2021, 20:11:56) \n[GCC 7.3.1 20180712 (Red Hat 7.3.1-12)]'
+To print the platform-specific information
+>>> sys.platform
+'linux'
+
+In the operating system, you have the command echo $PATH to find which directories is shell to check for executables.
+echo $PATH
+/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/ec2-user/.local/bin:/home/ec2-user/bin
+Similarly, Python will look for executables in the specified path, which can be determined using the sys.path.
+>>> sys.path
+['', '/usr/lib64/python37.zip', '/usr/lib64/python3.7', '/usr/lib64/python3.7/lib-dynload', '/usr/lib64/python3.7/site-packages', '/usr/lib/python3.7/site-packages']
+
+To find out the list of modules Python import to run the script, use sys.modules.
+>>> sys.modules
+
+Suppose you want to exit from Python use sys.exit(). In the below script, the moment it encounters path doesn’t exist, your script with exit using sys.exit(). Python will be going to stop the running of your script and your script exit.
+import os
+import sys
+if os.path.exists("/etc/hostss"):
+sys.exit()
