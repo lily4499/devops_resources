@@ -1,0 +1,59 @@
+---
+- name: Install Docker on Ubuntu and CentOS
+  hosts: your_target_hosts  # Specify your target hosts here
+  become: true  # Use sudo or become the root user
+
+  tasks:
+    - name: Install required packages (Ubuntu)
+      apt:
+        name: ['apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common']
+        state: present
+      when: ansible_distribution == 'Ubuntu'
+
+    - name: Add Docker APT GPG key (Ubuntu)
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+      when: ansible_distribution == 'Ubuntu'
+
+    - name: Add Docker APT repository (Ubuntu)
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+        state: present
+      when: ansible_distribution == 'Ubuntu'
+
+    - name: Install Docker packages (Ubuntu)
+      apt:
+        name: ['docker-ce', 'docker-ce-cli', 'containerd.io']
+        state: present
+      when: ansible_distribution == 'Ubuntu'
+
+    - name: Start and enable Docker service (Ubuntu)
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+      when: ansible_distribution == 'Ubuntu'
+
+    - name: Install required packages (CentOS)
+      yum:
+        name: ['yum-utils', 'device-mapper-persistent-data', 'lvm2']
+        state: present
+      when: ansible_distribution == 'CentOS'
+
+    - name: Add Docker YUM repository (CentOS)
+      command: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+      when: ansible_distribution == 'CentOS'
+
+    - name: Install Docker packages (CentOS)
+      yum:
+        name: ['docker-ce', 'docker-ce-cli', 'containerd.io']
+        state: present
+      when: ansible_distribution == 'CentOS'
+
+    - name: Start and enable Docker service (CentOS)
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+      when: ansible_distribution == 'CentOS'
