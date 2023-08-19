@@ -1,0 +1,86 @@
+How to Create and Run Spring Boot Web Application in Spring Tool Suite 4 | Spring Boot | Java Maven
+
+Make sure java, maven and Visual studio code are installed
+
+Prerequisites
+JDK version 1.8.0 or later
+VS Code (version 1.19.0 or later)
+
+How to install
+
+open VS Code and press F1 or Crtl+Shift+P to open command palette, select install extension and type vscode-spring-boot-dashboard
+
+to start a maven project
+
+Crtl+Shift+p -> spring initializr: maven prroject
+
+Choose project dependency
+spring web
+H2 datatbase for SQL
+spring Data JPA
+
+MODIFY PACKAGE
+
+package com.lili.kon.demospring;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController 
+@SpringBootApplication
+public class DemoSpringApplication {
+
+	@RequestMapping(value="/")
+    public String index() {
+        return "<h1> Hello, World Liliane!</h1>";
+    }
+
+	public static void main(String[] args) {
+		SpringApplication.run(DemoSpringApplication.class, args);
+	}
+
+}
+
+mvn validate
+mvn clean package
+java -jar target/demo-spring-0.0.1-SNAPSHOT.jar --server.port=8082 
+
+open on browser
+
+******************************************************************************************
+
+To run a Spring Boot application on a different port, you can specify the desired port using the server.port property in the application's configuration. Here's how you can do it:
+
+Using application.properties:
+
+Open your src/main/resources/application.properties file (create one if it doesn't exist) and add the following line to set the port:
+
+server.port=8081
+Replace 8081 with the port number you want to use.
+
+Using application.yml:
+
+If you're using YAML configuration, open your src/main/resources/application.yml file and add the following lines:
+
+server:
+  port: 8081
+Again, replace 8081 with the desired port.
+
+Using Command Line:
+
+You can also specify the port directly when starting your Spring Boot application using the command line. Use the --server.port option followed by the desired port number.
+
+java -jar target/my-web-app-1.0-SNAPSHOT.jar --server.port=8081
+
+This will override the port specified in the configuration files for this specific run.
+
+After making the necessary changes, save the configuration file and restart your Spring Boot application. It will now run on the new port you've specified.
+
+Remember to update your browser's URL accordingly to access the application on the new port (e.g., http://localhost:8081).
+
+
+
+
