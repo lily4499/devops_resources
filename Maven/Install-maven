@@ -1,0 +1,20 @@
+how to install maven on windows 10
+
+Step1 : Download ans install java
+step 2: set the following path: Env variables -> system variables : 
+    set java bin path  -> path -> C:\ProgramFiles\java\bin
+    set java_HOME  -> new -> JAVA_HOME -> C:\ProgramFiles\java
+
+
+step3 : Download maven -> apache-maven****-bin.zip -> WinRAR -> extract ->copy -> C:\ProgramFiles\paste here
+step4: set the following : Env variables -> system variables :
+     set Maven bin path -> path -> C:\ProgramFiles\apache-maven***-bin\apache-maven***\bin
+	   set MavEN_HOME  -> new -> MAVEN_HOME  -> C:\ProgramFiles\apache-maven***-bin\apache-maven***
+
+
+
+2. To switch between Java versions, you can use the following command:
+
+   ```
+   sudo update-alternatives --config java
+   ```
