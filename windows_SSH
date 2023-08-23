@@ -1,0 +1,133 @@
+how to install opennssh on windows
+
+
+To install OpenSSH on a Windows computer, you can follow these steps:
+
+Enable OpenSSH Feature:
+
+Open the Start menu and search for "Settings."
+In the Settings window, select "Apps" and then click on "Optional features."
+Scroll down and click on "Add a feature."
+Search for "OpenSSH Client" and "OpenSSH Server." Click on each of them to install.
+Using PowerShell:
+
+Open PowerShell with administrator privileges. To do this, right-click on the Start menu, select "Windows PowerShell (Admin)."
+To install the OpenSSH Server feature, use the following command:
+
+Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+To install the OpenSSH Client feature, use the following command:
+
+Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
+Start OpenSSH Server:
+
+Once the OpenSSH Server feature is installed, you can start the service using PowerShell:
+
+Start-Service sshd
+Automatic Start (Optional):
+
+To ensure that the OpenSSH Server starts automatically with Windows, you can set it to "Automatic" startup:
+
+Set-Service -Name sshd -StartupType 'Automatic'
+Allow OpenSSH Through Windows Firewall:
+
+Open the Start menu and search for "Windows Defender Firewall."
+Click on "Allow an app or feature through Windows Defender Firewall."
+Scroll down and look for "OpenSSH Server" and "OpenSSH SSH Server Proxy." Make sure both are checked for the networks you want to allow SSH access on (e.g., Private and Public).
+Configure SSH Server (Optional):
+
+By default, the OpenSSH server should be set up with reasonable defaults. However, if you need to make specific configurations, you can edit the sshd_config file located in C:\ProgramData\ssh.
+Connect Using SSH:
+
+Once OpenSSH Server is installed and running, you can connect to the Windows machine using an SSH client like the one available on Ubuntu's terminal. Use the command:
+
+ssh username@windows_ip
+
+***********************************************************************************************************
+
+how  to allow OpenSSH through the Windows Firewall as mentioned in the previous response.
+
+
+To allow OpenSSH through the Windows Firewall, follow these steps:
+
+Open Windows Defender Firewall Settings:
+
+Open the Start menu and search for "Windows Defender Firewall."
+Click on "Windows Defender Firewall with Advanced Security."
+Allow Inbound Rules for OpenSSH:
+
+In the Windows Defender Firewall window, click on "Inbound Rules" on the left-hand side.
+Add a New Rule:
+
+In the right-hand pane, click on "New Rule..." This will open the New Inbound Rule Wizard.
+Choose Rule Type:
+
+Select "Port" and click "Next."
+Specify Protocol and Port:
+
+Select "TCP" as the protocol.
+Select "Specific local ports" and enter 22 (the default SSH port) or the custom port you've configured if different.
+Click "Next."
+Choose Action:
+
+Select "Allow the connection" and click "Next."
+Choose When to Apply the Rule:
+
+Leave all three options checked (Domain, Private, Public).
+Click "Next."
+Give the Rule a Name:
+
+Enter a name for the rule, such as "OpenSSH," and you can also add a description if you'd like.
+Click "Finish."
+Review and Save:
+
+Review the settings you've configured.
+Click "Finish" to create the rule.
+After creating the inbound rule, Windows Defender Firewall will allow incoming SSH connections through the specified port. This should resolve any "Connection refused" errors related to the firewall blocking the OpenSSH connection.
+
+Remember that these instructions are based on the information available as of September 2021. If you're using a newer version of Windows, there might be slight differences in the interface or options. Always refer to the official Microsoft documentation for the most accurate and up-to-date information.
+
+*********************************************************************************************************
+
+how to add user to windows without email
+
+If you want to add a user to Windows without using an email address (i.e., creating a local user account), you can do so using the following steps:
+
+Using Windows Settings:
+
+Open the Start menu and click on the "Settings" (gear icon) or press Win + I keys together to open the Settings window.
+
+In the Settings window, click on "Accounts."
+
+In the left pane, click on "Family & other users."
+
+Under "Other users," click on the "Add someone else to this PC" link.
+
+Click on "The person I want to add doesn't have an email address."
+
+Enter the new user's name, password, and password hint (optional).
+
+Click "Next" and then click "Finish."
+
+The new user account will be added to your PC. You can now choose the account type (Standard or Administrator). An Administrator account has more privileges, so be cautious when assigning this type of account.
+
+Using Control Panel:
+
+Open the Control Panel on your computer. You can do this by searching for "Control Panel" in the Start menu.
+
+In the Control Panel, click on "User Accounts."
+
+Click on "Manage another account."
+
+Click on "Add a new user in PC settings."
+
+Follow the prompts and select the option to create an account for someone who doesn't have an email address. Enter the new user's name, password, and password hint.
+
+Complete the process by following the on-screen instructions.
+
+After creating the new local user account, the user will be able to log in to the Windows computer using the provided credentials. Make sure to choose the appropriate account type (Standard or Administrator) based on the user's needs and the level of access you want to grant.
+
+Keep in mind that the steps may vary slightly depending on the version of Windows you're using. Creating local user accounts is a good way to provide access to your computer without requiring an email address or Microsoft account.
+
+
+
+
