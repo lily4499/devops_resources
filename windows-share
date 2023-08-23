@@ -1,0 +1,117 @@
+how to setup windows shared
+
+Setting up shared folders on Windows allows you to share files and folders with other users on the same network. Here's how you can set up shared folders on a Windows computer:
+
+Choose a Folder to Share:
+
+Select the folder that you want to share with others. Right-click on the folder and choose "Properties."
+Enable Sharing:
+
+In the folder's Properties window, go to the "Sharing" tab.
+Click on the "Share" button.
+Select Users to Share With:
+
+In the "File Sharing" window, you'll see a field to enter the names or email addresses of the users you want to share with.
+Click the "Add" button to add users or groups.
+Set Permissions:
+
+After adding users, select each user from the list and use the drop-down menu to set their permission level: Read or Read/Write.
+You can also click "Add" again to add more users and set their permissions.
+Add Shared Folder Name:
+
+In the "File Sharing" window, you'll see the "Shared name" field. This is the name that others will use to access the shared folder. You can keep the default name or enter a new one.
+Share the Folder:
+
+Click the "Share" button to confirm sharing the folder.
+Accessing Shared Folder from Another Computer:
+
+On another computer on the same network, open the File Explorer.
+In the address bar, type \\computer_name\shared_folder_name and press Enter.
+Replace computer_name with the name of the computer sharing the folder and shared_folder_name with the name you entered in step 5.
+Enter Credentials (if prompted):
+
+You might be prompted to enter a username and password to access the shared folder. Use the credentials of the user account on the computer sharing the folder.
+Access Shared Files:
+
+Once connected, you'll be able to access the shared files and folders as if they were on your own computer.
+Remember that Windows shared folders are accessible only to users on the same network and with the appropriate permissions. Be mindful of security when sharing folders and ensure that you only grant access to users you trust.
+
+Additionally, the exact steps and options might vary slightly depending on your Windows version. If you're running into issues or need more detailed instructions, you can refer to the official Microsoft documentation for setting up shared folders on your specific Windows version.
+
+
+
+
+*******************************************************************************************************************
+
+how to setup windows shared with ubuntu
+
+To set up shared folders between a Windows computer and an Ubuntu computer, you can use the SMB (Server Message Block) protocol, also known as Windows File Sharing. Here's how to do it:
+
+On Windows:
+
+Choose a Folder to Share:
+
+Select the folder you want to share on your Windows computer.
+Right-click on the folder and select "Properties."
+Enable Sharing:
+
+In the folder's Properties window, go to the "Sharing" tab.
+Click on the "Advanced Sharing" button.
+Share the Folder:
+
+Check the box that says "Share this folder."
+You can use the "Permissions" button to set the access permissions for users.
+Click "OK" to close the Advanced Sharing window.
+Note the Computer Name:
+
+Open the Start menu and search for "System."
+Click on "System" to open the System Information window.
+Note the "Device name" or "Computer name."
+On Ubuntu:
+
+Install Samba:
+
+Open a terminal on your Ubuntu computer.
+Run the following command to install the Samba package:
+
+sudo apt-get install samba
+Create a Directory for Mounting:
+
+Create a directory on your Ubuntu system where you'll mount the shared folder. For example:
+
+mkdir ~/shared_folder
+Edit Samba Configuration:
+
+Open the Samba configuration file for editing using a text editor (e.g., nano or gedit):
+
+sudo nano /etc/samba/smb.conf
+Add Shared Folder Configuration:
+
+Scroll to the end of the file and add the following lines:
+
+[SharedName]
+path = /path/to/shared/folder   # Replace with the actual path of the Windows shared folder
+browsable = yes
+guest ok = yes
+read only = no
+create mask = 0755
+Replace SharedName with a name for the shared folder.
+Replace /path/to/shared/folder with the path of the Windows shared folder. For example, \\computer_name\shared_folder_name.
+Restart Samba:
+
+Save the file and exit the text editor.
+Restart the Samba service to apply the changes:
+Copy code
+sudo service smbd restart
+Accessing the Shared Folder on Ubuntu:
+
+Open the File Manager on your Ubuntu computer.
+
+In the address bar, enter:
+
+smb://computer_name/SharedName
+Replace computer_name with the Windows computer's name and SharedName with the name you assigned to the shared folder.
+
+You'll be prompted for a username and password. Use the credentials of a user account on the Windows computer that has access to the shared folder.
+
+Once connected, you'll be able to access the shared files and folders on your Ubuntu computer.
