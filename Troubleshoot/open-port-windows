@@ -1,0 +1,40 @@
+To see if a specific port is open on Windows, you can use the following steps:
+
+1. Open Command Prompt: 
+
+- Open the Command Prompt by typing "cmd" in the search bar and selecting "Command Prompt" from the results.
+
+2. Use the "netstat" command: 
+
+- Type the following command "netstat -ano | findstr [port_number]" and press Enter 
+- Replace [port_number] with the number of the port you want to check. For example, if you want to check if port 80 is open, you should type "netstat -ano | findstr 80".
+- This command will show you if the port is open and the process connected to it.
+
+3. Use telnet: 
+
+- Open Command Prompt and type "telnet [IP address] [port number]" and press Enter.
+- Replace [IP address] with the IP address of the server or device you want to connect to and [port number] with the number of the port you want to check.
+- If the port is open, you should see a blank screen with a blinking cursor. If it's closed, you may get an error message.
+
+************************************************************************
+
+
+To forcefully kill a process by its Process ID (PID) on Windows, you can use the following steps:
+
+1. Open Command Prompt:
+
+- Press the Windows key + R to open the Run dialog box.
+- Type "cmd" and press Enter to open Command Prompt.
+
+2. Kill the process forcefully:
+
+- In Command Prompt, type the following command and press Enter:
+```
+taskkill /F /PID [PID_number]
+```
+- Replace [PID_number] with the actual PID of the process you want to kill. For example, if the PID is 1234, you would type:
+```
+taskkill /F /PID 1234
+```
+- Press Enter to execute the command.
+- The process with the specified PID should now be forcefully terminated. Please note that this may result in loss of unsaved data or unexpected consequences, so use it with caution.
