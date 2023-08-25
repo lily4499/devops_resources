@@ -1,0 +1,165 @@
+
+There are many Docker commands, but here are some of the most common ones with a brief explanation:
+
+docker build: Builds an image from a Dockerfile.
+docker run: Creates a container from an image and starts it.
+docker ps: Lists all running containers.
+docker stop: Stops a running container.
+docker restart: Restarts a running container.
+docker kill: Terminates a running container.
+docker rm: Removes a container.
+docker images: Lists all images.
+docker pull: Downloads an image from a registry.
+docker push: Uploads an image to a registry.
+docker inspect: Displays detailed information about a container or image.
+docker logs: Displays the logs for a container.
+docker network: Manage Docker networks.
+docker volume: Manage Docker volumes.
+docker compose: Manage Docker applications using compose files.
+For more information on Docker commands, please see the Docker command-line reference: https://docs.docker.com/engine/reference/commandline/.
+
+Here are some additional commands that you may find useful:
+
+docker search: Searches for images in a registry.
+docker login: Logs in to a registry.
+docker logout: Logs out of a registry.
+docker tag: Tags an image.
+docker create: Creates a container from an image without starting it.
+docker attach: Attaches to a running container.
+docker exec: Executes a command in a running container.
+docker cp: Copies files between a container and the host machine.
+docker diff: Shows the differences between the filesystem of a container and the image it was created from.
+docker system: Manage Docker resources.
+docker info: Displays information about Docker.
+
+  **************************************************************************
+
+  Certainly! Here is a list of common Docker commands along with explanations of each command:
+
+Building Images:
+
+docker build -t image-name .
+Builds a Docker image using the Dockerfile in the current directory (.) and tags it with the specified image name (-t flag).
+Managing Images:
+
+docker images
+Lists all available Docker images on your system.
+docker rmi image-name
+Removes the specified Docker image.
+Running Containers:
+
+docker run image-name
+Creates and starts a new container from the specified image.
+docker run -d image-name
+Runs a container in detached mode (in the background).
+docker run -p host-port:container-port image-name
+Maps a host port to a container port when running a container.
+docker run --name container-name image-name
+Assigns a custom name to the running container.
+Managing Containers:
+
+docker ps
+Lists all running containers.
+docker ps -a
+Lists all containers, including stopped ones.
+docker stop container-id/container-name
+Stops a running container.
+docker start container-id/container-name
+Starts a stopped container.
+docker restart container-id/container-name
+Stops and then starts a container.
+docker rm container-id/container-name
+Removes a stopped container.
+Viewing Container Logs:
+
+docker logs container-id/container-name
+Displays the logs of a running or stopped container.
+Executing Commands in Containers:
+
+docker exec -it container-id/container-name command
+Runs a command inside a running container in interactive mode (-it).
+Inspecting Containers:
+
+docker inspect container-id/container-name
+Provides detailed information about a container.
+Pulling and Pushing Images:
+
+docker pull image-name
+Downloads a Docker image from a registry.
+docker push image-name
+Uploads a Docker image to a registry (requires appropriate permissions).
+Cleaning Up:
+
+docker system prune
+Removes all stopped containers, unused networks, and dangling images.
+docker system prune -a
+Cleans up everything, including unused images.
+Working with Volumes:
+
+docker volume create volume-name
+Creates a Docker volume.
+docker run -v volume-name:container-path image-name
+Mounts a Docker volume to a container's specified path.
+Docker Compose:
+
+docker-compose up
+Starts services defined in a docker-compose.yml file.
+docker-compose down
+Stops and removes containers, networks, and volumes defined in a docker-compose.yml file.
+Networking:
+
+docker network ls
+Lists Docker networks.
+docker network create network-name
+Creates a Docker network.
+docker network connect network-name container-name
+Connects a container to a network.
+These are just some of the most commonly used Docker commands. Docker has a wide range of commands and options for managing containers, images, networks, and more. For detailed information on a specific command, you can use the docker <command> --help syntax, such as docker run --help, to see its usage and available options.
+
+
+  *****************************************************************************************************
+
+  
+  Here are all the common Docker commands and their explanations:
+
+1. `docker run <image_name>` – This command runs a new container from the specified image.
+
+2. `docker stop <container_id>` – This command stops a running Docker container with the specified container ID.
+
+3. `docker ps` – This command lists all the running Docker containers on your system. Adding `-a` will show all containers that have ever been created.
+
+4. `docker images` – This command lists all the Docker images that are currently available on your system.
+
+5. `docker build <path_to_dockerfile>` - This command builds a Docker image from the Dockerfile located at the specified path.
+
+6. `docker rm <container_id>` – This command removes a Docker container with the specified container ID.
+
+7. `docker rmi <image_id>` – This command removes a Docker image with the specified image ID.
+
+8. `docker logs <container_id>` – This command displays the logs for a Docker container with the specified container ID.
+
+9. `docker inspect <container_id>` – This command provides detailed information about a Docker container with the specified container ID.
+
+10. `docker exec <container_id> <command>` – This command runs a command in a running Docker container with the specified container ID.
+
+11. `docker push <image_name>` – This command pushes a Docker image with the specified name to a Docker registry.
+
+12. `docker pull <image_name>` – This command pulls a Docker image with the specified name from a Docker registry.
+
+13. `docker-compose up` – This command starts the containers specified in the `docker-compose.yml` file.
+
+14. `docker-compose down` – This command stops and removes the containers specified in the `docker-compose.yml` file.
+
+15. `docker-compose build` – This command builds the containers specified in the `docker-compose.yml` file.
+
+16. `docker inspect <container_id>` – This command provides detailed information about a Docker container with the specified container ID.
+
+17. `docker container prune` – This command removes all stopped Docker containers.
+
+18. `docker image prune` – This command removes all unused Docker images.
+
+19. `docker volume prune` – This command removes all unused Docker volumes.
+
+20. `docker network prune` – This command removes all unused Docker networks.
+
+Overall, these Docker commands provide developers with an easy-to-use interface for managing Docker containers and images. Whether you are building, deploying, or scaling applications, Docker commands play a crucial role in the containerization process.
