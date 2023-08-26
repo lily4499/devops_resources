@@ -1,0 +1,119 @@
+On Master Node:
+
+bash
+Copy code
+# Update and install necessary packages
+sudo apt-get update -y
+sudo apt-get install -y apt-transport-https curl
+
+# Add Kubernetes GPG key and repository
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+# Install kubeadm, kubelet, and kubectl
+sudo apt-get update -y
+sudo apt-get install -y kubelet kubeadm kubectl
+sudo apt-mark hold kubelet kubeadm kubectl
+
+# Initialize Kubernetes master
+sudo kubeadm init --pod-network-cidr=192.168.0.0/16
+
+# Set up kubeconfig for non-root user
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+# Install a network plugin (e.g., Calico)
+kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+On Worker Nodes:
+
+bash
+Copy code
+# Update and install necessary packages
+sudo apt-get update -y
+sudo apt-get install -y apt-transport-https curl
+
+# Add Kubernetes GPG key and repository
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+# Install kubeadm, kubelet, and kubectl
+sudo apt-get update -y
+sudo apt-get install -y kubelet kubeadm kubectl
+sudo apt-mark hold kubelet kubeadm kubectl
+On Master Node (After kubeadm init):
+
+bash
+Copy code
+# Copy the kubeadm join command displayed after initialization
+# Run this command on worker nodes to join them to the cluster
+On Master Node:
+
+bash
+Copy code
+# Allow pods to be scheduled on the master node (not recommended for production)
+kubectl taint nodes --all node-role.kubernetes.io/master-
+Verify:
+
+bash
+Copy code
+# On the master node, check the nodes
+kubectl get nodes
+
+
+*********************************************************************************
+
+
+python
+Copy code
+import os
+import platform
+
+def install_kubernetes_ubuntu():
+    # Update and install necessary packages
+    os.system("sudo apt-get update -y")
+    os.system("sudo apt-get install -y apt-transport-https curl")
+    
+    # Add Kubernetes GPG key and repository
+    os.system("curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -")
+    os.system("echo 'deb https://apt.kubernetes.io/ kubernetes-xenial main' | sudo tee /etc/apt/sources.list.d/kubernetes.list")
+    
+    # Install kubeadm, kubelet, and kubectl
+    os.system("sudo apt-get update -y")
+    os.system("sudo apt-get install -y kubelet kubeadm kubectl")
+    os.system("sudo apt-mark hold kubelet kubeadm kubectl")
+
+def install_kubernetes_amazon_linux():
+    # Install Docker (required by Kubernetes)
+    os.system("sudo amazon-linux-extras install docker -y")
+    os.system("sudo service docker start")
+    os.system("sudo usermod -a -G docker ec2-user")
+    
+    # Add Kubernetes repository and install kubeadm, kubelet, and kubectl
+    os.system("sudo tee /etc/yum.repos.d/kubernetes.repo <<EOF\n")
+    os.system("[kubernetes]\n")
+    os.system("name=Kubernetes\n")
+    os.system("baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64\n")
+    os.system("enabled=1\n")
+    os.system("gpgcheck=1\n")
+    os.system("repo_gpgcheck=1\n")
+    os.system("gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg\n")
+    os.system("exclude=kubelet kubeadm kubectl\n")
+    os.system("EOF")
+    
+    os.system("sudo yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes")
+    os.system("sudo systemctl enable --now kubelet")
+
+if __name__ == "__main__":
+    # Determine the Linux distribution
+   # distro = os.uname()[3].split("-")[0]
+    distro =  platform.uname().release.split('.')[4]
+    
+    if distro == "Ubuntu":
+        install_kubernetes_ubuntu()
+        print("Kubernetes installed on Ubuntu.")
+    elif distro == "amzn":
+        install_kubernetes_amazon_linux()
+        print("Kubernetes installed on Amazon Linux.")
+    else:
+        print("Unsupported distribution.")
