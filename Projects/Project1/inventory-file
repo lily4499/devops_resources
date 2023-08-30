@@ -1,0 +1,11 @@
+[masters]
+178.128.191.174 ansible_host=MASTER_HOST
+
+[nodes]
+165.22.143.69 ansible_host=NODE_HOST
+165.22.143.71 ansible_host=NODE1_HOST
+
+[all:vars]
+MASTER_HOST=Dev13
+NODE_HOST=Dev11
+NODE1_HOST=Dev12
