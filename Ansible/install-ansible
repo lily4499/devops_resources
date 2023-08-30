@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# To install Ansible on Ubuntu 22.04, follow these steps:
+
+# Update the system packages list:
+
+sudo apt update -y
+
+
+# Install the required dependencies:
+
+sudo apt install software-properties-common -y
+
+# Add the Ansible PPA (Personal Package Archive) to the system:
+
+sudo apt-add-repository ppa:ansible/ansible
+
+# Update the system packages list:
+
+sudo apt update -y
+
+# Install Ansible:
+
+sudo apt install ansible -y
+
+#Check Ansible Version in CLI
+
+ansible --version
+
+***********************************************************************************************
