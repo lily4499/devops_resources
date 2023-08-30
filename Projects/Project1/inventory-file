@@ -9,3 +9,15 @@
 MASTER_HOST=Dev13
 NODE_HOST=Dev11
 NODE1_HOST=Dev12
+
+
+
+[masters]
+master.example.com ansible_host=MASTER_HOST
+
+[nodes]
+node.example.com ansible_host=NODE_HOST
+
+[all:vars]
+MASTER_HOST=your_master_host
+NODE_HOST=your_node_host
