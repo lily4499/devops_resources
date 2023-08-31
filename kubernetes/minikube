@@ -1,0 +1,49 @@
+minikube start
+minikube is local Kubernetes, focusing on making it easy to learn and develop for Kubernetes.
+
+All you need is Docker (or similarly compatible) container or a Virtual Machine environment, and Kubernetes is a single command away: minikube start
+
+What you’ll need
+2 CPUs or more
+2GB of free memory
+20GB of free disk space
+Internet connection
+Container or virtual machine manager, such as: Docker, QEMU, Hyperkit, Hyper-V, KVM, Parallels, Podman, VirtualBox, or VMware Fusion/Workstation
+
+*****************************************
+Start a cluster using the virtualbox driver:
+minikube start --driver=virtualbox
+
+To make virtualbox the default driver:
+minikube config set driver virtualbox
+
+********************************************
+
+lili@KONISSI:~$ sudo usermod -aG docker $USER && newgrp docker
+
+**********************************************
+
+
+To install the latest minikube stable release on x86-64 Linux using binary download:
+
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
+
+***************************************************************
+
+2Start your cluster
+From a terminal with administrator access (but not logged in as root), run:
+
+minikube start
+If minikube fails to start, see the drivers page for help setting up a compatible container or virtual-machine manager.
+
+3Interact with your cluster
+If you already have kubectl installed, you can now use it to access your shiny new cluster:
+
+kubectl get po -A
+Alternatively, minikube can download the appropriate version of kubectl and you should be able to use it like this:
+
+minikube kubectl -- get po -A
+You can also make your life easier by adding the following to your shell config:
+
+alias kubectl="minikube kubectl --"
