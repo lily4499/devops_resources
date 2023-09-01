@@ -1,0 +1,35 @@
+lili@KONISSI:~$ ssh lili@KONISSI
+The authenticity of host 'konissi (127.0.1.1)' can't be established.
+ECDSA key fingerprint is SHA256:ItPMTnf8my3kcN4C6KuCIkNUmJKceevfYIv5Z22HURE.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added 'konissi' (ECDSA) to the list of known hosts.
+lili@konissi: Permission denied (publickey).
+
+
+Let's clarify the role of these two files:
+
+known_hosts: This file on your local machine contains the fingerprints of remote servers' public keys that you have previously connected to. When you connect to a server, SSH compares its public key's fingerprint with the one stored in your known_hosts file to verify the server's identity.
+
+authorized_keys: This file is located on the remote server. It contains the public keys of authorized users. When you try to connect to a server using SSH key authentication, your local private key is matched against the public keys stored in the authorized_keys file of the remote server.
+
+Since you mentioned that you don't have an authorized_keys file on the remote server, it means that key-based authentication is not set up for the user you're trying to log in as.
+
+Here's what you can do:
+
+Set Up Key-Based Authentication: If you want to use SSH key-based authentication, you need to create an authorized_keys file on the remote server. You should place the public key of the user you're logging in as into this file.
+
+Here's how you can create the authorized_keys file and add your public key (assuming you have your public key available):
+
+bash
+Copy code
+mkdir -p ~/.ssh
+echo "your-public-key-here" >> ~/.ssh/authorized_keys
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+Replace "your-public-key-here" with the actual content of your public key.
+
+Password Authentication: If you don't want to set up key-based authentication, you can connect using password authentication (if allowed by the server's configuration). Just use the -o PasswordAuthentication=yes option with the ssh command:
+
+bash
+Copy code
+ssh -o PasswordAuthentication=yes lili@hostname
