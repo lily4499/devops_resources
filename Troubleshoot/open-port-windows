@@ -38,3 +38,22 @@ taskkill /F /PID 1234
 ```
 - Press Enter to execute the command.
 - The process with the specified PID should now be forcefully terminated. Please note that this may result in loss of unsaved data or unexpected consequences, so use it with caution.
+
+
+*****************************************************************
+
+
+lili@KONISSI:~$ ssh lili@172.21.29.92
+ssh: connect to host 172.21.29.92 port 22: Connection refused
+
+
+lili@KONISSI:~$ sudo apt install openssh-server -y
+
+lili@KONISSI:~$ sudo systemctl restart ssh
+
+lili@KONISSI:~$ sudo ufw --force enable
+
+lili@KONISSI:~$ sudo ufw allow 22/tcp
+
+lili@KONISSI:~$ sudo ufw reload
+
