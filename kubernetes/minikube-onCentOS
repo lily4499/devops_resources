@@ -1,0 +1,122 @@
+How to Install Minikube on CentOS
+
+install docker
+
+Uninstall old versions 
+Older versions of Docker went by the names of docker or docker-engine. Uninstall any such older versions before attempting to install a new version, along with associated dependencies.
+
+$ sudo yum remove docker \
+                  docker-client \
+                  docker-client-latest \
+                  docker-common \
+                  docker-latest \
+                  docker-latest-logrotate \
+                  docker-logrotate \
+                  docker-engine
+
+Install using the rpm repository 
+Before you install Docker Engine for the first time on a new host machine, you need to set up the Docker repository. Afterward, you can install and update Docker from the repository.
+
+Set up the repository 
+Install the yum-utils package (which provides the yum-config-manager utility) and set up the repository.
+
+$ sudo yum install -y yum-utils
+$ sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+Install Docker Engine 
+Install Docker Engine, containerd, and Docker Compose:
+Latest Specific version
+To install the latest version, run:
+
+$ sudo yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+If prompted to accept the GPG key, verify that the fingerprint matches 060A 61C5 1B55 8A7F 742B 77AA C52F EB6B 621E 9F35, and if so, accept it.
+
+This command installs Docker, but it doesn't start Docker. It also creates a docker group, however, it doesn't add any users to the group by default.
+
+Start Docker.
+
+$ sudo systemctl start docker
+
+$ sudo usermod -aG docker $USER && newgrp docker
+
+
+
+
+
+Step 3: Installing Minikube
+Note: You are using the wget command to download Minikube. If you don’t have the software installed on your CentOS, run the command: sudo yum -y install wget.
+
+With the virtualization service enabled, you can move on to installing Minikube.
+
+1. Download the Minikube binary package using the wget command:
+
+wget https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+
+Download Minikube on CentOS.
+2. Then, use the chmod command to give the file executive permission:
+
+chmod +x minikube-linux-amd64
+
+3. Finally, move the file to the /usr/local/bin directory:
+
+sudo mv minikube-linux-amd64 /usr/local/bin/minikube
+
+4. With that, you have finished setting up Minikube. Verify the installation by checking the version of the software:
+
+minikube version
+
+The output should display the version of Minikube installed on your CentOS.
+
+Verify Minikube installation.
+Step 4: Installing Kubectl
+Apart from installing Minikube, you also need to set up kubectl, the command line tool for working with Kubernetes.
+
+1. Run the following command to download kubectl:
+
+curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+
+2. Give it executive permission:
+
+chmod +x kubectl
+
+3. Move it to the same directory where you previously stored Minikube:
+
+sudo mv kubectl  /usr/local/bin/
+
+4. Verify the installation by running:
+
+kubectl version --client -o json
+
+Verify Kubectl installation.
+Step 5: Starting Minikube
+To start using Minikube and start a single node cluster inside a virtual machine, you just need to run the command:
+
+minikube start
+minikube start --memory=4096mb
+minikube start --memory=2200mb --driver=docker
+
+kubectl get nodes
+
+########### installation of pods
+$ vi pod.yml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.14.2
+    ports:
+    - containerPort: 80
+
+
+$ kubectl create -f pod.yml
+$ kubectl get pods -o wide
+
+##########to login to k8s cluster
+$ minikube ssh
+#############to show your running application
+$ curl IP
+Ctrl+C
