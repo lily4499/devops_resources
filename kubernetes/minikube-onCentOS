@@ -35,6 +35,7 @@ Start Docker.
 
 $ sudo systemctl start docker
 $ sudo systemctl enable docker
+
 $ sudo usermod -aG docker $USER && newgrp docker
 
 
@@ -91,97 +92,4 @@ $ minikube start
 $ minikube start --memory=4096mb
 $ minikube start --memory=2200mb --driver=docker
 
-kubectl get nodes
----------------------------------------------------------------------------------------------------------------------------------------------
-########### installation of pods
-$ vi pod.yml
-
-apiVersion: v1                                                                                
-kind: Pod
-metadata:
-  name: nginx
-spec:
-  containers:
-  - name: nginx
-    image: nginx:1.14.2
-    ports:
-    - containerPort: 80
-
-(docker run -d nginx:1.14.2 --name nginx -p 80:80)
-
-$ kubectl create -f pod.yml
-$ kubectl apply -f pod.yml
-$ kubectl get pods -o wide
-$ kubectl get all
-$ kubectl get all -A
-
-$ kubectl describe pod nginx  -> to get status of the pod
-$ kubectl logs nginx
-
-##########to login to minikube or k8s cluster
-$ minikube ssh
-$ ssh -i <ip_node or node_name>        ->  if it is a k8s cluster
-
-#############to show your running application
-
-$ curl IP
-$ curl -L http://10.244.0.8:8000/demo
-
-Ctrl+C  to quit pod
-kubectl delete pod nginx
-
----------------------------------------------------------------------------------------------------------------------------------
-
-############## How to get autoscaling and autohealing in my application
-move from pod to deployment
-*******************
-Windows Subsystem for Linux has no installed distributions.
-
-Use 'wsl.exe --list --online' to list available distributions
-and 'wsl.exe --install <Distro>' to install.
-*******************************
-vim deployment.yml
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx-deployment
-  labels:
-    app: web
-spec:
-  selector:
-    matchLabels:
-      app: web
-  replicas: 5
-  strategy:
-    type: RollingUpdate
-  template:
-    metadata:
-      labels:
-        app: web
-    spec:
-      containers:
-       —name: nginx
-          image: nginx
-          ports:
-           —containerPort: 80
--------------------------
-kubectl apply -f deployment.yml
-kubectl get deploy
-kubectl get rs  -> replicaset
-kubectl get pod
-kubectl get pods -w   -> watching
-
--------------------------------------------------------------------
-
-kubernetes service will do a service discovery mechanism using labels and selectors
-service, instead of keepingtrack on IP address, it keeps track on labels
-svc  -->>  load balacing
-            service discovery
-            expose to world
-----------------------------
-type of service created in kubernetes:
-load balancer : for everyone to access
-Node pods : for people inside your organization (people who access your vpc)
-cluster IP : for people who have access to your k8s
 
