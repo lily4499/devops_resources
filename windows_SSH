@@ -1,3 +1,11 @@
+*******************
+Windows Subsystem for Linux has no installed distributions.
+
+Use 'wsl.exe --list --online' to list available distributions
+and 'wsl.exe --install <Distro>' to install.
+*******************************
+
+
 how to install opennssh on windows
 
 
