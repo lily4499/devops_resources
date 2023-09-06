@@ -1,6 +1,70 @@
 install docker
+sudo usermod -aG docker $USER && newgrp docker
 install kubectl
 install minikube
 
 minikube start
 minkube start --memory=4096 --driver=hyperkit
+
+kubectl get nodes
+vi pod.yml  -> a pod is a specification on how to run your container
+                (docker run -d nginx:1.14.2 --name nginx -p 80:80)
+kubectl create -f pod.yml
+kubectl apply -f pod.yml
+
+kubectl describe pod nginx
+kubectl logs nginx 
+
+kubectl get pods -o wide   -> get IP -> or kubectl describe
+minikube ssh  -> to login to minikube  or ssh -i IP_k8s-master -> if k8s
+curl IP
+
+kubectl delete pod nginx
+
+
+---------------------------------------------------k8s deployment
+kubectl get pods
+kubectl get deploy
+kubectl delete deploy nginx-deployment
+kubectl get all
+kubectl get all -A
+
+create Deploy => Replicaset => Pods
+
+vim deployment.yml
+kubectl apply -f deployment.yml
+kubectl get deploy
+kubectl get pods
+kubectl get rs   -> replicaset
+
+kubectl delete pod nginx-deployment-985656-uyttr
+kubectl get pods -w  -> watching: show you in live what is happening
+ 
+vim deployment.yml
+kubectl apply -f deployment.yml
+
+-----------------------------------------------------k8s service
+
+when you deploy a deployment, for each deploymet, you create a service
+service works on the concept of label and selector
+k8s service identify the pods using Selectors and Labels so every time a pod come up, label will remain the same
+the selector match the label of the pod and a new pod is cretaed, which is identified by label , then traffic is sent as well
+
+git clone repo
+cd to repo
+cd python-web-app (Dockerfile, app:devops, requirements.txt)
+vim Dockerifle
+docker build -t laly9999/python-app-demo:v1 .
+docker login
+docker push
+
+vim deployment.yml  (give replicas, give selector and label name; give image repo/name; look container port in dockerfile:expose or cmd:8000)
+kubectl apply -f deployment.yml
+kubectl get deploy    -> (kubectl talk to k8s API server and get info of deploy )
+kubectl get pods
+
+kubectl get pods -o wide   -> get IP of the pods (172.17.0.5, 172.17.0.7)
+kubectl get pods -v=7
+
+minikube ssh
+curl -L http://172.17.0.5:8000/demo  -> devops/devops/urls.py : urlpatterns = [path()]
