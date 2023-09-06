@@ -1,0 +1,6 @@
+install docker
+install kubectl
+install minikube
+
+minikube start
+minkube start --memory=4096 --driver=hyperkit
