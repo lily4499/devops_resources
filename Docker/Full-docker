@@ -1,0 +1,101 @@
+intro to docker
+docker vs VM
+installing docker
+basic docker command
+docker networking
+building custom image
+docker best practices
+docker volumes
+pushing docker images to registry
+docker compose
+
+Hands-on    UI  -> <-API -> <- Database
+
+Docker is a tool designed to create, deploy and run applications easily by using containers
+image is a bundle which contains the app along with all the dependencies required
+container is an isolated environment where app runs
+
+problem: time consuming, compatiblity issues, cost , overhead of resource
+
+how docker solve: light weight and uses less resources, portability, scability, rapid development
+
+docker overview: image and container  are like class and object : class is a blueprint which hold the info to crearte an object;
+images contain the instructions to create nber of similar container
+
+docker architecture: 
+docker engine is a client server application and used to build containers applications
+docker server which is a type of long running program called daemon process and used to create and manage docker objects like images, containers, networks,and volumes
+docker server pulls and pushes the images from the docker registry
+docker client with which the user can interact with the docker, it includes rest api that specifies the interface that program can use to talk to the demon and instruct it on what to do 
+docker listens for the docker api request continually and manages the docker resources based on that request. 
+cli (command line interface) which uses the docker rest api internally to control or interact with the docker daemon through the scripting 
+
+kernel controls the access to the resources and schedules processes, that means whenever we perform an operation a
+process will be created and allocated some resources to that process like cpu memory
+
+passing variable to docker command
+
+docker run -e USERAME=root -e PASSWORD=**** -p 27017:27017 -d mongo:4.4.6
+---------------------------------------------------
+Docker networking
+docker inspect container_IP to get IP address of the container
+
+to run another container with the same IP of the other container
+docker run -e USERAME=root -e PASSWORD=**** -e ME_CONFIG_MONGODB_SERVER=container_IP -p 8081:8081 -d --name mongo-web mongo-express
+but is not good, because if ip change, server down
+
+we can refer by the container name instead of the IP address
+docker network ls
+if you run alpine image , it will be exited because alpine is an OS, and the purpose of conatiner is not to host any OS , 
+but to run some service or some computation in the container.
+when there is no service in the container, immediately it get exited
+
+bridge network can access external resources and containers in the same network
+we can refer by the container name instead of the IP address by creating custom bridge network
+
+docker network create mongo-net --driver bridge
+docker network ls
+docker stop $(docker ps -a)
+docker run -e USERAME=root -e PASSWORD=**** -p 27017:27017 -d --net mongo-net --name mongodb mongo:4.4.6
+docker run -e USERAME=root -e PASSWORD=**** -e ME_CONFIG_MONGODB_SERVER=mongodb -p 8081:8081 -d --net mongo-net --name mongo-web mongo-express
+
+------------------------------------------------------------------------
+volume is not only for database. it can use for any stateful application
+
+docker volume ls
+docker volume ls -f name=mongo-data   or docker volume create mongo-data
+docker inspect volume mongo-data
+
+where data is store on each database:
+mongo = /data/db
+postgresql= /var/lib/postgresql/data
+mysql= /var/lib/mysql
+
+docker run -d -p 21017:21017 --net mongo-net --name=mongodb -v mongo-data:/data/db mongo:4.4.6
+
+docker stop mongodb
+docker rm mongodb
+docker volume rm monda-data
+
+-------------------------------------------------
+
+push image to ecr  on AWS 
+create separate repo for each image
+
+go to AWS -> ecr(elasticcontainer registry) -> create repo -> private -> name -> create
+IAM -> create user
+
+on ubuntu
+sudo snap install aws-cli --classic
+aws configure
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 888888888888.dkr.ecr.us-east-1.amazonaws.com
+aws ecr describe-repositories
+
+Build your Docker image using the following command. For information on building a Docker file from scratch see the instructions here . You can skip this step if your image is already built:
+docker build -t test-push .
+
+After the build completes, tag your image so you can push the image to this repository:
+docker tag test-push:latest 88888888888.dkr.ecr.us-east-1.amazonaws.com/test-push:latest
+
+Run the following command to push this image to your newly created AWS repository:
+docker push 8888888888888.dkr.ecr.us-east-1.amazonaws.com/test-push:latest
