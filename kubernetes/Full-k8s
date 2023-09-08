@@ -1,0 +1,18 @@
+k8s is an open-source system for automating deployment, scaling and management of containerized applications. 
+
+what problem k8s solve:
+features of k8s: monitoring, self healing, high availability, loadbalancing, autoscaling
+alternatives of kubernetes:
+
+In real time especially when you move from monolith to microservices there will be hundreds even thousands of containers running on multiple nodes
+we never know when and which container goes down 
+so what if there is a way to monitor the health of each container and node , then automatically bring them back when they go down: it is called self healing or resilience
+
+kubernetes checks or monitors the health of each container and node and brings them back when they go down so we will not face any downtime ; we call this availability
+
+what if there is a way to increase the number of containers if the load increases , and decrease the number of containers if the load decreases this is called scaling 
+
+not only scaling containers but it can scale nodes also meaning if there are multiple containers are running in a node and while creating a new container if there are not enough
+resources like cpu and ram kubernetes can automatically spin up another container for us and kubernetes can run our containers in a node based on the resources available
+4:02
+this is called automatic bin packing
