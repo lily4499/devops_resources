@@ -1,8 +1,10 @@
 k8s is an open-source system for automating deployment, scaling and management of containerized applications. 
+docker creates container, then k8s manage those containers
+k8s cluster = master node or control plane(API server, Etcd, scheduler(schedule pod on the)) + worker node
 
 what problem k8s solve:
-features of k8s: monitoring, self healing, high availability, loadbalancing, autoscaling
-alternatives of kubernetes:
+features of k8s: monitoring, self healing, high availability, loadbalancing, autoscaling, rolling and canary deployment, 
+alternatives of kubernetes:docker swarm, MESOS, AWS ECS, k8s(st popular with most advanced features)
 
 In real time especially when you move from monolith to microservices there will be hundreds even thousands of containers running on multiple nodes
 we never know when and which container goes down 
@@ -16,3 +18,11 @@ not only scaling containers but it can scale nodes also meaning if there are mul
 resources like cpu and ram kubernetes can automatically spin up another container for us and kubernetes can run our containers in a node based on the resources available
 4:02
 this is called automatic bin packing
+
+and if there is no load it can remove the node which can save lot of cost also if a node crashes it can move the container to the ld and running node 
+we can also tell kubernetes that how much resources a container should use
+
+with rolling deployments we can replace the containers one by one that way your application will still serve the request without any downtime
+with kubernetes we can also upgrade a percentage of containers which is called canary deployments
+
+With kubernetes we can deploy and update secrets and application configuration without rebuilding our image and without exposing secrets in your stack configuration
