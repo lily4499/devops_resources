@@ -116,3 +116,81 @@ sudo vim /etc/hosts
 ping foo.bar.com
 curl -L http://foo.bar.com/bar -v
 
+---------------------------------------------------------------
+configMaps : env
+
+code configmap.yml
+metadata:
+  name: configmap-k8s
+data:
+  db-port: "3306"
+
+kubectl apply -f configmap.yml
+kubectl get cm
+kubectl describe cm configmap-k8s
+
+Take field "data...3306" from configmap.yml, then put it as env variables inside k8s
+
+vim deployment.ym 
+
+spec:
+      containers:
+      - name: k8s-demo
+        image: laly9999/demo-k8s:1.2
+        env:
+        - name: DB-PORT
+          valueFrom:
+            configMapKeyRef:
+              name: configmap-k8s
+              key: db-port
+        ports:
+        - containerPort: 8000
+
+kubectl apply -f deployment.yml
+kubectl get pods -w
+kubectl exec -it k8s-demo-64bdc9b8b9-q5wp9 -- /bin/bash
+env | grep DB
+exit
+##################
+Take field "data...3306" from configmap.yml, then put it as file inside k8s using volumeMount
+comngigMap info will be save inside a file instead env variable
+
+vim deployment.yml
+containers:
+      - name: k8s-demo
+        image: laly9999/demo-k8s:1.2
+        volumeMounts:
+          - name: db-connection
+            mountPath: /opt  # which file system do we mount
+        ports:
+        - containerPort: 8000
+      volumes:           #create volume that read info from config map
+      - name: db-connection
+        configMap: 
+          name: configmap-k8s
+
+kubectl apply -f deployment.yml
+kubectl get pods -w
+kubectl get pods
+kubectl exec -it k8s-demo-6f76dd674b-8bddw -- /bin/bash
+ls /opt
+cat /opt/db-port | more
+exit
+########################
+
+secret 
+kubectl create secret generic secret-k8s --from-literal=db-port="3306"
+kubectl describe secret secret-k8s
+kubectl edit secret secret-k8s
+echo MzMwNg== | base64 --decode
+
+kubectl create secret generic secret-k8s --from-literal=db-password="autour"
+
+---------------------------------------------------------------------
+RBAC
+service account / users
+roles / cluster role
+role binding / cluster role binding
+
+
+
