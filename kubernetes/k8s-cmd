@@ -67,4 +67,52 @@ kubectl get pods -o wide   -> get IP of the pods (172.17.0.5, 172.17.0.7)
 kubectl get pods -v=7
 
 minikube ssh
-curl -L http://172.17.0.5:8000/demo  -> devops/devops/urls.py : urlpatterns = [path()]
+curl -L http://172.17.0.5:8000/demo  -> devops/devops/urls.py : urlpatterns = [path('demo/')]
+
+--------------------------------------
+expose your app to others people in your organization using nodeport
+
+vim service.yml (type: nodeport, port:80, targetport:8000, nodeport:3007)
+kubectl apply -f service.yml
+kubectl get svc -v=9
+kubectl get svc  -> cluster-ip=10.101.63.207
+minikube ssh
+curl -L http://10.101.63.207:80/demo -v
+exit 
+
+minikube ip  ->ip=192.168.64.10
+curl -L http://192.168.64.10:3007/demo  or go to the browser
+http://192.168.64.10:3007/demo
+------------------------------------------
+expose your app to others people outside your organization using loadbalancer supported by cloud, 
+cloud control manager will generate a public ip address, then share to customer
+kubectl get svc
+kubectl edit svc service-name (change type to loadbalancer) 
+
+---------------------------------------------------
+service discovery
+
+kubectl get svc
+kubectl edit svc service-name or
+vim service.yml (modify selector: app: eeeeeeeeeee and now it is different from the label in the deployment)
+kubectl apply -f service.yml
+http://192.168.64.10:3007/demo  app is not accessible, so this service is not discover
+
+------------------------------------------------------
+
+ingress
+
+minikube addons enable ingress
+kubectl get pods -A | grep nginx
+
+vim ingress.yml
+kubectl apply -f ingress.yml
+kubectl logs ingress-nginx-controller-7799c6795f-8hkbg -n ingress-nginx
+ kubectl get ingress
+
+curl -L http://foo.bar.com/bar -v
+ping foo.bar.com
+sudo vim /etc/hosts
+ping foo.bar.com
+curl -L http://foo.bar.com/bar -v
+
