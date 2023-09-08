@@ -187,10 +187,19 @@ echo MzMwNg== | base64 --decode
 kubectl create secret generic secret-k8s --from-literal=db-password="autour"
 
 ---------------------------------------------------------------------
-RBAC
-service account / users
-roles / cluster role
-role binding / cluster role binding
+concepts of k8s RBAC
+
+service account /    -> craete users management
+roles / cluster role  -> take care of permissions
+role binding / cluster role binding  -> binding the permissions to users
+
+ if you are creating a role within a specific namespace, it will be called as role
+if you are creating a role within the scope of the cluster, it is called as a cluster role
 
 
+create an openshift cluster
+RedHat account created get save in DevSandbox
+Identity provider= DevSandbox: detremine kind of user is he: paid user? subscription user? RedHat user? sending all tyhis info to penshift cluster using this identity provider
+
+Open RedHat OpenShift -> Administrator -> 
 
