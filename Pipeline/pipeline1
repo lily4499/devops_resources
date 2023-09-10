@@ -1,0 +1,27 @@
+CICD pipeline for java application to deploy on kubernetes cluster using jenkins
+server needed = jenkins, k8s master, k8s node, nexus, sonar
+
+pull the code from github
+do the static code analysis using sonarqube 
+check the status of quality gate in sonar
+if sonar check fail -> mark ci as fail and send mail
+if sonar check success -> 
+using multistage dockerfile build the code, generate artifact, and create docker image
+push the images to private docker registry which is nexus or jfrog
+check if any misconfigurations helm charts
+if check fail -> mark ci as fail and send mail
+if check success ->
+helm charts push to nexus or jfrog
+manal approval
+deploy on k8s cluster
+send api to test app deployment
+
+docker run -d -p 9000:9000 sonarqube:lts   admin/admin
+ docker run -d -p 8081:8081 --name nexus sonatype/nexus3        admin/*****************
+
+ docker volume create --name nexus-data
+$ docker run -d -p 8081:8081 --name nexus -v nexus-data:/nexus-data sonatype/nexus3
+
+Mount a host directory as the volume.
+ mkdir /some/dir/nexus-data && chown -R 200 /some/dir/nexus-data
+$ docker run -d -p 8081:8081 --name nexus -v /some/dir/nexus-data:/nexus-data sonatype/nexus3
