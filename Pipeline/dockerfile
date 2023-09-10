@@ -1,0 +1,37 @@
+ we'll assume you have a Maven-based Spring Boot project:
+   Multi-stage builds are commonly used in Docker to keep the final image size small while including only the necessary files and dependencies.
+
+Dockerfile
+
+# Stage 1: Build the application using Maven
+FROM maven:3.8.4-openjdk-11 as build
+WORKDIR /app
+COPY . .
+RUN mvn clean package
+
+# Stage 2: Create a minimal runtime image
+FROM openjdk:11-jre-slim
+WORKDIR /app
+COPY --from=build /app/target/your-application.jar app.jar
+CMD ["java", "-jar", "app.jar"]
+Here's a breakdown of the Dockerfile:
+
+Stage 1 (build):
+
+It starts with the maven:3.8.4-openjdk-11 image, which includes Maven and OpenJDK 11 for building the application.
+Sets the working directory in the container to /app.
+Copies the entire application (including your pom.xml file) into the /app directory.
+Runs the Maven build process (mvn clean package) to build your Spring Boot application. This will produce a JAR file in the target directory of your project.
+Stage 2:
+
+Uses the openjdk:11-jre-slim image as the base image for the runtime environment. This image contains only the Java Runtime Environment (JRE) and is smaller in size compared to a full JDK image.
+Sets the working directory in the container to /app.
+Copies the JAR file built in the previous stage (identified by --from=build) into the /app directory within the runtime container.
+Specifies a command to run your application using java -jar app.jar when a container is started.
+To build the Docker image using this Dockerfile, you can use the following command:
+
+docker build -t my-spring-app .
+After the image is built, you can run a container from it:
+
+docker run -p 8080:8080 my-spring-app
+This will start a container running your Spring Boot application on port 8080, just like the previous example.
