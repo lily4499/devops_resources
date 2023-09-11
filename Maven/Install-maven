@@ -18,3 +18,25 @@ step4: set the following : Env variables -> system variables :
    ```
    sudo update-alternatives --config java
    ```
+
+from Ubantu terminal execute:
+
+export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/
+to test maven run:
+
+mvn --version
+
+
+According to Your editor.
+
+sudo vim /etc/profile
+add these 2 lines at the end of the file
+
+export JAVA_HOME="/usr/lib/jvm/java-8-oracle"  
+export PATH=JAVA_HOME/bin:$PATH
+Then
+
+source /etc/profile
+Check
+
+mvn -version
