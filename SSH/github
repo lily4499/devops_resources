@@ -1,0 +1,68 @@
+how to ssh from ubuntu server to github
+
+
+To SSH from an Ubuntu server to GitHub, you need to set up SSH keys and configure your GitHub account to recognize and authenticate with those keys. Here's a step-by-step guide:
+
+Generate SSH Key Pair:
+
+If you haven't already, you need to generate an SSH key pair on your Ubuntu server. Open a terminal on your server and run the following command:
+
+
+ssh-keygen -t ed25519 -C "your_email@example.com"
+Replace "your_email@example.com" with your GitHub email address. You can also use RSA keys by changing -t ed25519 to -t rsa, but Ed25519 keys are recommended for better security.
+
+This command will create a new SSH key pair in the ~/.ssh/ directory by default. You can leave the passphrase empty or set one as per your preference.
+
+Add the SSH Key to SSH Agent:
+
+Start the SSH agent to manage your keys and add your SSH private key to it. Run the following commands:
+
+
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+Replace ~/.ssh/id_ed25519 with the path to your private key if it's different.
+
+Copy the Public Key to Your Clipboard:
+
+Use the following command to copy the contents of your public key to your clipboard:
+
+cat ~/.ssh/id_ed25519.pub | xclip -selection clipboard
+If you don't have xclip installed, you can install it with sudo apt-get install xclip.
+
+Add SSH Key to GitHub:
+
+Go to your GitHub account settings:
+
+Click on your profile picture in the top right corner.
+Select "Settings."
+In the left sidebar, click "SSH and GPG keys."
+Click the "New SSH key" button.
+In the "Title" field, give your key a name.
+Paste your public key from the clipboard into the "Key" field.
+Test the SSH Connection:
+
+To verify that your SSH key is properly configured and working, you can run the following command:
+
+
+ssh -T git@github.com
+You should receive a message that says something like "Hi your-username! You've successfully authenticated..."
+
+Now you should be able to SSH from your Ubuntu server to GitHub without providing a username or password each time you interact with GitHub repositories. Your SSH key will be used for authentication.
+
+
+_________________________________________________________________________________
+
+It looks like you've successfully generated an SSH key pair and added your public key to your GitHub account. However, you're still experiencing issues with Git authentication using HTTPS. To resolve this, you need to switch your Git remote URL from HTTPS to SSH. Here's how to do it:
+
+Change Git Remote URL:
+
+Go to your project directory and update the remote URL to use SSH instead of HTTPS. Replace the existing URL with the SSH URL, which should look something like this:
+git remote set-url origin git@github.com:lily4499/demo-sping.git
+
+This command sets the remote URL for the "origin" remote to use SSH.
+
+Push Your Changes:
+
+Now, try pushing your code again:
+
+git push -u origin main
