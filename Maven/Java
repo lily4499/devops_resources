@@ -1,0 +1,48 @@
+Set java path
+
+rom Ubantu terminal execute:
+
+export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/
+to test maven run:
+
+mvn --version
+
+___________________________________________________________
+
+According to Your editor.
+
+sudo vim /etc/profile
+add these 2 lines at the end of the file
+
+export JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64/"
+export JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64/"
+export PATH=JAVA_HOME/bin:$PATH
+
+or
+
+export JAVA_HOME="/usr/lib/jvm/java-8-oracle"  
+export PATH=JAVA_HOME/bin:$PATH
+Then
+
+source /etc/profile
+Check
+
+mvn -version
+
+____________________________________________________________________
+
+
+lilia@KONISSI:~/spring-maven$ update-alternatives --list java
+/usr/lib/jvm/java-11-openjdk-amd64/bin/java
+/usr/lib/jvm/java-17-openjdk-amd64/bin/java
+
+
+lilia@KONISSI:~/spring-maven$ echo $JAVA_HOME
+/usr/lib/jvm/java-11-openjdk-amd64/
+
+______________________________________________________
+
+To switch between 2 java version
+
+lilia@KONISSI:~/spring-maven$  sudo update-alternatives --config java
+
