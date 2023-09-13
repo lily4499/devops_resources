@@ -124,6 +124,8 @@ Click on Poll SCM -> Schedule -> H/2**** : every 2 min, it goes to github to see
 Click on Github hook trigger for GITScm polling:Configure github to send a trigger to jenkins when there is an update. So Jenkins doesn’t need to poll every time github.
 We do it only when jenkins is hosted on the internet like jenkins_IBT and not a localhost. Github.com wont be able to talk to localhost
 
+go to github -> settings -> webhooks -> add webhook -> payload URL = http://IP:8080/github-webhook/  -> content type = application/json -> add webhook
+
 
 Build Steps: more plugins installed, more build steps appear
 
