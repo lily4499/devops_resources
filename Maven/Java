@@ -2,7 +2,7 @@ Set java path
 
 rom Ubantu terminal execute:
 
-export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/
 to test maven run:
 
 mvn --version
@@ -43,6 +43,13 @@ lilia@KONISSI:~/spring-maven$ echo $JAVA_HOME
 ______________________________________________________
 
 To switch between 2 java version
-
 lilia@KONISSI:~/spring-maven$  sudo update-alternatives --config java
+
+
+____________________________________________________________________________
+
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/
+export PATH=$PATH:$JAVA_HOME/bin
+echo $JAVA_HOME
+mvn validate
 
