@@ -81,6 +81,63 @@ After making the necessary changes, save the configuration file and restart your
 
 Remember to update your browser's URL accordingly to access the application on the new port (e.g., http://localhost:8081).
 
+#####################################################################################
 
+
+
+To create a Spring Boot application using Maven on Ubuntu, you can follow these steps:
+
+Step 1: Install Java Development Kit (JDK)
+Ensure that you have Java Development Kit (JDK) installed on your Ubuntu machine. You can install OpenJDK, which is an open-source implementation of the Java platform, using the following command:
+
+bash
+sudo apt update
+sudo apt install openjdk-11-jdk
+
+
+Step 2: Install Apache Maven
+Apache Maven is a build automation tool used for managing and building Java projects. You can install Maven using the following command:
+
+bash
+sudo apt install maven
+
+
+Step 3: Create a Spring Boot project using Maven
+Open a terminal and navigate to the directory where you want to create your Spring Boot project. Use the Maven command-line tool to generate the project structure. Run the following command:
+
+bash
+mvn archetype:generate -DgroupId=com.example -DartifactId=my-spring-boot-app -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+
+
+This command will create a new directory named `my-spring-boot-app` with the basic Maven project structure.
+
+Step 4: Update the Maven project
+Change to the project directory using `cd my-spring-boot-app`. Open the `pom.xml` file in a text editor and add the following dependencies within the `<dependencies>` section:
+
+xml
+<dependencies>
+    <!-- Spring Boot Starter -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+</dependencies>
+
+
+Save the `pom.xml` file.
+
+Step 5: Build and run the Spring Boot application
+To build and run the Spring Boot application, use the following command:
+
+bash
+mvn spring-boot:run
+
+
+This command will download the necessary dependencies, compile the code, and start the Spring Boot application.
+
+Step 6: Access the application
+Once the application is running, you can access it in a web browser by navigating to `http://localhost:8080`. You should see the default Spring Boot welcome page.
+
+That's it! You have successfully created a Spring Boot application using Maven on Ubuntu. You can now start developing your application by adding controllers, services, and other components as per your requirements.
 
 
