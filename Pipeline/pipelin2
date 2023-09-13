@@ -1,0 +1,64 @@
+pipeline {
+    agent any
+
+    environment {
+        SONAR_HOST_URL = credentials('SONAR_HOST_URL')
+        SONAR_TOKEN = credentials('SONAR_TOKEN')
+        ARTIFACTORY_USERNAME = credentials('ARTIFACTORY_USERNAME')
+        ARTIFACTORY_PASSWORD = credentials('ARTIFACTORY_PASSWORD')
+        DOCKERHUB_USERNAME = credentials('DOCKERHUB_USERNAME')
+        DOCKERHUB_PASSWORD = credentials('DOCKERHUB_PASSWORD')
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build and Test with Maven') {
+            steps {
+                sh 'mvn clean install'
+                // Add any additional Maven steps here for testing
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube Server') {
+                    sh 'mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN -Dsonar.host.url=$SONAR_HOST_URL'
+                }
+            }
+        }
+
+        stage('Publish to JFrog Artifactory') {
+            steps {
+                withMaven(maven: 'Maven 3') {
+                    sh 'mvn deploy -Dmaven.test.skip=true -Dmaven.javadoc.skip=true --settings settings.xml'
+                }
+            }
+        }
+
+        stage('Build Docker image') {
+            steps {
+                sh 'docker build -t your-image-name:tag .'
+                sh 'echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin'
+                sh 'docker push your-image-name:tag'
+            }
+        }
+
+        stage('Minikube Setup') {
+            steps {
+                sh 'minikube start'
+                sh 'kubectl config use-context minikube'
+            }
+        }
+
+        stage('Deploy Helm Chart') {
+            steps {
+                sh 'helm install your-helm-release ./path/to/your/helm/chart'
+            }
+        }
+    }
+}
