@@ -1,0 +1,59 @@
+Creating a Helm chart for a Spring Boot application involves organizing the Kubernetes resources and Helm templates necessary to deploy and manage your application. You can include all the necessary YAML files for your Spring Boot application within the Helm chart. Here's a step-by-step guide on how to do this:
+
+1. Install Helm: If you haven't already, make sure you have Helm installed on your system. You can follow the official Helm installation guide: https://helm.sh/docs/intro/install/
+
+2. Create a Helm Chart:
+
+You can create a new Helm chart using the helm create command:
+
+shell
+Copy code
+helm create my-spring-app
+This command will generate a directory structure for your Helm chart, including templates, values, and other necessary files.
+
+3. Organize Your Helm Chart:
+
+Inside the my-spring-app directory, you will find several files:
+
+templates/: This directory contains template files for Kubernetes resources.
+values.yaml: This file stores default values for your chart.
+Chart.yaml: This file contains metadata about your chart.
+4. Add Your YAML Files:
+
+Place all your Spring Boot application's Kubernetes resource YAML files inside the templates/ directory. These can include:
+
+Deployment YAML
+Service YAML
+ConfigMap or Secret YAML
+Ingress (if needed)
+For example, if you have a Deployment YAML file, you can place it at templates/deployment.yaml within your chart directory.
+
+5. Customize Values:
+
+Edit the values.yaml file to specify configuration values for your Spring Boot application. You can define things like image name, environment variables, resources, and other application-specific settings.
+
+yaml
+Copy code
+# values.yaml
+springApp:
+  image:
+    repository: your-repo/my-spring-app
+    tag: latest
+  # Add other configuration settings here
+6. Install Your Helm Chart:
+
+Now that you've organized your Helm chart and included your application's YAML files, you can install it onto your Kubernetes cluster (or Minikube) using the following command:
+
+shell
+Copy code
+helm install my-spring-app ./my-spring-app
+Replace my-spring-app with your chart name and directory.
+
+7. Upgrade and Manage:
+
+You can manage your deployed application using Helm. For example, to upgrade your application with new configuration settings or a new image version, you can use the helm upgrade command.
+
+shell
+Copy code
+helm upgrade my-spring-app ./my-spring-app
+That's it! You've created a Helm chart that includes all the necessary YAML files for your Spring Boot application, making it easier to deploy and manage on Kubernetes. Make sure to adapt the templates and values to match your specific application's requirements.
