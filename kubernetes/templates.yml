@@ -1,0 +1,94 @@
+In Helm, you can create a single templates.yaml file that includes the templates for Deployment, Service, ConfigMap, and Ingress resources. Here's how you can structure a single templates.yaml file to define these resources in a Helm chart for a Spring Boot application:
+
+yaml
+Copy code
+# templates.yaml
+
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-deployment
+spec:
+  replicas: {{ .Values.deployment.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-app
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-app
+    spec:
+      containers:
+        - name: {{ .Release.Name }}-container
+          image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: {{ .Values.deployment.resources.requests.memory }}
+              cpu: {{ .Values.deployment.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.deployment.resources.limits.memory }}
+              cpu: {{ .Values.deployment.resources.limits.cpu }}
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: {{ .Values.deployment.environment.SPRING_PROFILES_ACTIVE }}
+            - name: DATABASE_URL
+              value: {{ .Values.deployment.environment.DATABASE_URL }}
+
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-service
+spec:
+  selector:
+    app: {{ .Release.Name }}-app
+  ports:
+    - protocol: TCP
+      port: {{ .Values.service.port }}
+      targetPort: 8080
+  type: {{ .Values.service.type }}
+
+---
+# ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-configmap
+data:
+  application.properties: |
+    server.port: 8080
+    spring.datasource.url: {{ .Values.configmap.data.application.properties.spring.datasource.url }}
+    # Add other Spring Boot configuration properties here
+
+---
+# Ingress (optional)
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-ingress
+spec:
+  rules:
+    - host: {{ .Values.ingress.hostname }}
+      http:
+        paths:
+          - path: {{ .Values.ingress.path }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-service
+                port:
+                  number: {{ .Values.service.port }}
+{{- end }}
+In this single templates.yaml file, each resource (Deployment, Service, ConfigMap, Ingress) is defined with appropriate metadata and specifications. The Helm templating syntax is used to insert values from your values.yaml file into the templates.
+
+Please make sure that your values.yaml file is correctly structured and contains the necessary configuration values for these resources. You can then refer to these templates within your Helm chart to deploy your Spring Boot application on Kubernetes with Helm.
+
+
+
+
