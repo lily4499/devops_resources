@@ -1,0 +1,47 @@
+ what is AWS IAM?
+IAM is Identity Access Management
+Authentication
+Authorization
+
+Agenda
+* user, policy, role, groups
+* authentication methods
+* policy (managed or custom)
+  - Permission policy
+    - Identity policy(attach to principal), resource base policy
+  - Trust policy
+* scp , PERMISSION   bouanderies
+* Cross account access
+* Access control using
+  - RBAC (Role-based access control)
+  - ABAC (Attribute-based access control)
+
+
+create a user
+ go to IAM -> add user -> name-> enable console access
+
+how to give only read permission to user to s3 bucket:
+Identity based policy: IAM -> choose User -> add permissions -> attach policies directly -> choose Amazons3readonlyaccess
+
+how to restrict access to one S3 bucket to user :
+ resource base policy: create a resource base policy then attach to that bucket:go to amazon s3 ->  buckets -> choose bucket -> click on permissions -> edit -> then paste this policy
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "Statement",
+            "Effect": "Deny",
+            "Principal": {
+                  "AWS": "arn:aws:iam::5866654455:user/user_name",
+            "Action": "s3:*",                        #"Action": "s3:GetObject",
+            "Resource": [
+                  "arn:aws:s3:::your-bucket-name/*"
+        }
+    ]
+}
+
+
+
+your app is running on ec2 instance, need to access s3 bucket to update a dynamodb table: 
+we can create a role with necessary permission, so ec2 can assume this role and do the manipulation on s3
+go to IAM -
