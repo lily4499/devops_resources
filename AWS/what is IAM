@@ -108,3 +108,42 @@ the user cannot create another user with more privilege than what he currently h
 
 go to iam aws -> users -> click on user_name -> click on permissions boundary -> 
 
+
+
+Cross account access
+Accessing a resource from another AWS account
+set up permission policy to assume role from the first  aws account, get access key from the user then login in cli with the user 
+
+set up role to the another aws account, user to assume that role and access resources (s3): create a role-> select trusted entity -> aws account -> another aws account
+-> add permissions -> create role
+
+go to cli to access this bucket using that role
+$ aws s3 ls
+$ aws sts get-caller-identity
+$ aws sts get-caller-identity --profile user
+$ aws sts assume-role --profile user --role-arn "arn:aws:iam::11111111:role/role_name" --role-session-name AWSCLI-Session --external-id code_name
+this command give access key, secret key , and token to export 
+$ export AWS_ACCESS_KEY_ID=ERTYUIKJHGFGHJ
+$ export AWS_SECRET_ACCESS_KEY=ERTYUIKJHGFGHJ
+$ export AWS_SESSION_TOKEN=
+$ aws s3 ls  -> access s3 bucket in account B
+$ unset  AWS_ACCESS_KEY_ID  AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
+
+
+
+RBAC, ABAC (role base access control, attribute base access control )
+
+{
+    "Version": "2012-10-17",
+    "Statement": {
+        "Sid": "AllowRemoveMfaOnlyIfRecentMfa",
+        "Effect": "Allow",
+        "Action": "s3:*",
+        "Resource": "arn:aws:iam::s3:::*",
+        "Condition": {
+            "StringEquals": {
+               "aws:PrincipalTag/group": "admin"
+        }
+       }
+    }
+}
