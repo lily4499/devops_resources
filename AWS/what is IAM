@@ -10,7 +10,7 @@ Agenda
   - Permission policy
     - Identity policy(attach to principal), resource base policy
   - Trust policy
-* scp , PERMISSION   bouanderies
+* scp , PERMISSION bouanderies
 * Cross account access
 * Access control using
   - RBAC (Role-based access control)
@@ -43,5 +43,68 @@ how to restrict access to one S3 bucket to user :
 
 
 your app is running on ec2 instance, need to access s3 bucket to update a dynamodb table: 
-we can create a role with necessary permission, so ec2 can assume this role and do the manipulation on s3
-go to IAM -
+we can create a role with necessary permission, so ec2 can assume this role and do the manipulation on s3.
+go to IAM -> roles -> create role -> AWS service -> ec2 -> next -> add permission (amazons3fullaccess) -> give a role name -> create role
+click on ec2 -> actions -> security -> modify IAM role -> select role -> update iam role
+
+
+how about organize your identity access management, for users with the same setup permissions, maintain permission in the large scale
+create a group, add those permissions, then add each user to his group
+go to IAM -> user grouyps -> create user group -> name -> add user -> attach permissions
+
+
+set up inline policies
+go to IAM -> user groups -> click on group -> permissions -> click on add permissions -> create inline policy -> visual editor ->select service -> select actions(write) 
+-> click on resources -> click on bucket -> give bucket name -> add -> review policy -> name -> create policy 
+
+
+
+AUTHENTICATION METHODS: way to access AWS resources
+* username/passwd
+* access key/ secret
+* signing certificate
+ - amazon ec2
+* ssh key/https git credentials
+ - aws codecommit/ aws codepipeline
+
+
+
+* access key/ secret : cli
+on server -> aws configure --profile user_name  ->aws s3 ls -> but you dont get access to reources because you didnt use the default profile
+on server -> aws configure -> aws s3 ls 
+on server -> aws configure --profile user_name -> aws s3 ls 
+
+ssh kery error ; change 0644 to chmod 400 ./key.pem
+
+
+STS (secure token service)
+responsible for creating short-lived token
+ ec2 instance access s3 bucket  = role
+ trust policy is used here
+
+
+
+
+scp (service control policy)
+scp can be used to control access in AWS account level
+AWS Organizations: central governance and management across AWS accounts
+go to AWS organization -> add an aws account -> create or invite -> 
+organization units enable you to group several accounts together and administer them as a single unit
+
+we are going to add unit to root -> aws org -> aws account -> orgainzation -> root -> actions -> create new -> name organization unit -> create organizational unit
+if you have other aws account , you can add into that unit: how the scp work
+
+ aws org -> aws account -> policies -> service control policies -> enable service policies -> (par default it creates some aws manage policy)
+-> create policy -> policy name ->  add actions(choose service ) -> add a resource -> create policy
+
+aws org -> aws account -> orgainzation -> root -> click on unit_created -> policies -> attach policy : any aws account under this unit will get this permissions
+
+
+
+PERMISSION bouanderies
+it avoids to do privilege escalation
+if a user has permission boundary, this user cannot create another user without adding permission boundary
+the user cannot create another user with more privilege than what he currently has
+
+go to iam aws -> users -> click on user_name -> click on permissions boundary -> 
+
