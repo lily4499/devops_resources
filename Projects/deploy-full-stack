@@ -1,0 +1,98 @@
+Deploy Full Stack Application (Spring-Boot+MySQL+React) to AWS(EC2, RDS, S3) 
+  springh-boot => API
+  MySQL => Database
+  ReactJS => Frontend
+
+  steps:
+Create database in RDS
+Get the remote database and connect to the project
+create ec2 instance and push to springboot 
+Get ec2-spring-boot endpoint and connect to react app
+Deploy react app to s3
+
+  to do:
+
+  on gitbash: git clone ...............
+  open backend in intellij
+  open frontend in visualcode
+
+  go to aws : RDS-> create database -> standard -> Mysql -> select hide filters-> free tier -> DB_name ->username ->password ->choose public access-> additionale conf=db_name -> create db
+  click on security group -> inbound rules -> all trafic / all - anywhere; custom tcp / 0 - anywhere
+
+  Connect RDS to MySql workbench
+  Go to Mysql workbench -> connection name -> hostname=db_endpoint -> username -> password -> test connection = success connect to rds
+
+  now  connect springboot to RDS
+  Go to spring-app -> src/main/resources/application.properties
+  pring.datasource.url=jdbc:mysql://database-1.c7bjgesribls.us-east-1.rds.amazonaws.com:3306/employeeMS
+spring.datasource.username=admin
+spring.datasource.password=password
+spring.jpa.hibernate.ddl-auto=update
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+  then click on build project
+
+  now, run the application
+  Go to src/main/java/com.tutorial.employee../service/employeebackend
+  package com.tutorial.employeemanagmentbackend;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class EmployeemanagmentbackendApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(EmployeemanagmentbackendApplication.class, args);
+	}
+then click on run
+
+
+  Deploy backend to EC2
+  create ec2 -> ec2 security group -> ssh / 22; custom tcp / 8080- anywhere
+    Go to gitbash -> connect to ec2 -> yum update -> install jdk(spring bootrun on jave)
+
+    build the jar file then move it to ec2
+    Go to sring-app -> click on maven in the right -> lyfecycle -> install -> run maven build -> to generate jar file in the target folder
+scp -i "C:\Users\kido9\OneDrive\Documents\tomcat-key-pair.pem" employeemanagmentbackend-0.0.1-SNAPSHOT.jar ec2-user@ec2-18-234-159-95.compute-1.amazonaws.com:/home/ec2-user
+then run app on ec2 => java -jar employeemanagmentbackend-0.0.1-SNAPSHOT.jar
+
+    Go to react-app -> run npm -i  -> to install all packages
+    npm start -> it will open localhost:3000
+    
+    Go to react-project -> src/service/employeeservice.js
+
+    import axios from "axios";
+const BASE_URL = "http://ec2_ip:8080/employee";
+class EmployeeService{
+    //**Method to get all employee from our api or database */
+    getAllEmployee(){
+        return axios.get(BASE_URL);
+
+      Now deploy react-app to s3 bucket then turn it to website
+    we need to generate a build file from react-app ; then push it to s3
+        npm run build 
+
+      Go to Amazon S3 -> create bucket -> bucket_name -> remove block public acces -> acknoledge -> create
+      click on bucket -> permissions -> bucket policy -> edit ->paste script to allow bucket to public
+
+   "Version":"2012-10-17",
+   "Statement":[
+     {
+       "Sid":"PublicReadGetObject",
+       "Effect":"Allow",
+       "Principal":{"*"},
+       "Action":"s3:GetObject",
+       "Resource":"arn:aws:s3:::DOC-EXAMPLE-BUCKET/*",
+       "Condition": {
+         "StringEquals": {"s3:x-amz-acl":"bucket-owner-full-control"}
+       }
+     }
+   ]
+}
+
+   click on bucket -> properties -> static website hosting -> edit -> enable -> index.html -> error=index.html
+
+     click on bucket -> objects -> upload -> add files -> react-app -> build_file(json and html) -> open -> upload
+     click on bucket -> objects -> upldoad -> add folder -> react-app -> build_folder(static) -> open -> upload
+
+     Go to properties -> static website hosting -> you see bucket website endpoint
